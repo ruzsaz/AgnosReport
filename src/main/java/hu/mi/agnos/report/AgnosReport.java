@@ -5,6 +5,8 @@
  */
 package hu.mi.agnos.report;
 
+import hu.mi.agnos.report.repository.ReportRepository;
+
 /**
  *
  * @author parisek
@@ -15,5 +17,7 @@ public class AgnosReport {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        ReportRepository rr = new ReportRepository();
+        rr.findAll();
     }
 }

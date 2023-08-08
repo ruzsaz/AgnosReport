@@ -42,15 +42,26 @@ public class ReportRepository implements CrudRepository<Report, String> {
     private final String reportDirectoriURI;
     private final String xsdURI;
 
-    public ReportRepository(String reportDirectoriURI, String pathOfReportXSD) {
+    public ReportRepository() {
         logger = LoggerFactory.getLogger(ReportRepository.class);
-        this.reportDirectoriURI
-                = reportDirectoriURI.endsWith("/")
-                ? reportDirectoriURI.substring(0, reportDirectoriURI.length() - 1)
-                : reportDirectoriURI;
-        this.xsdURI = new StringBuilder(pathOfReportXSD)
-                .append(pathOfReportXSD.endsWith("/") ? "report.xsd" : "/report.xsd")
-                .toString();
+
+        final String AGNOS_HOME = System.getenv("AGNOS_HOME");
+
+        if (AGNOS_HOME.endsWith("/")) {
+            this.reportDirectoriURI = new StringBuilder(AGNOS_HOME)
+                    .append("AgnosReportingServer/Meta")
+                    .toString();
+            this.xsdURI = new StringBuilder(AGNOS_HOME)
+                    .append("global/conf/report.xsd")
+                    .toString();
+        } else {
+            this.reportDirectoriURI = new StringBuilder(AGNOS_HOME)
+                    .append("/AgnosReportingServer/Meta")
+                    .toString();
+            this.xsdURI = new StringBuilder(AGNOS_HOME)
+                    .append("/global/conf/report.xsd")
+                    .toString();
+        }
     }
 
     @Override
@@ -161,6 +172,22 @@ public class ReportRepository implements CrudRepository<Report, String> {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    public void deleteById(String cubeName, String reportName) {
+        Assert.notNull(cubeName, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
+        String reportFullName = new StringBuilder()
+                .append(cubeName)
+                .append(".")
+                .append(reportName)
+                .append(".report.xml")
+                .toString();
+        File file = new File(this.reportDirectoriURI + "/" + reportFullName);
+        if (file.exists()) {
+            file.delete();
+        }
+
     }
 
     @Override

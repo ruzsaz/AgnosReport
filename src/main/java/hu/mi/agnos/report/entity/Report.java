@@ -322,6 +322,7 @@ public class Report {
      * @param entity a beszúrandó Level
      * @return az új elem beszúrásának indexe
      */
+
     private int getInsertIdxOfNewHierarchy(Hierarchy entity) {
         int result = -1;
         for (int i = 0; i < this.hierarchies.size(); i++) {
@@ -360,6 +361,7 @@ public class Report {
         return result;
     }
 
+    
     @Override
     public String toString() {
         return "Report{" + "name=" + name + ", cubeName=" + cubeName + ", updatedBy=" + updatedBy + ", databaseType=" + databaseType + ", roleToAccess=" + roleToAccess + ", captions=" + captions + ", descriptions=" + descriptions + ", helps=" + helps + ", datasources=" + datasources + ", languages=" + languages + ", indicators=" + indicators + ", hierarchies=" + hierarchies + ", visualizations=" + visualizations + ", additionalCalculation=" + additionalCalculation + '}';
