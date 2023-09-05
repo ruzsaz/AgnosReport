@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.mi.agnos.report.entity;
+package hu.agnos.report.entity;
 
-import hu.mi.agnos.report.util.XmlEscaper;
 import java.util.ArrayList;
 
 /**

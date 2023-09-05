@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.mi.agnos.report.util;
+package hu.agnos.report.util;
 
-import hu.mi.agnos.report.entity.Hierarchy;
-import hu.mi.agnos.report.entity.Indicator;
-import hu.mi.agnos.report.entity.Level;
-import hu.mi.agnos.report.entity.Report;
-import hu.mi.agnos.report.entity.Visualization;
+import hu.agnos.report.entity.Indicator;
+import hu.agnos.report.entity.Hierarchy;
+import hu.agnos.report.entity.Level;
+import hu.agnos.report.entity.Report;
+import hu.agnos.report.entity.Visualization;
 import java.util.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.mi.agnos.report;
+package hu.agnos.report;
 
-import hu.mi.agnos.report.repository.ReportRepository;
+import hu.agnos.report.repository.ReportRepository;
 
 /**
  *

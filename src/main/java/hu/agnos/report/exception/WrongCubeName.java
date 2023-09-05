@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package hu.mi.agnos.report.exception;
+package hu.agnos.report.exception;
 
 /**
  *

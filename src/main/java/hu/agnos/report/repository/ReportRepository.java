@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hu.mi.agnos.report.repository;
+package hu.agnos.report.repository;
 
 //import hu.mi.agnos.report.entity.Cube;
-import hu.mi.agnos.report.entity.Report;
-import hu.mi.agnos.report.util.XmlMarshaller;
-import hu.mi.agnos.report.util.XmlParser;
+import hu.agnos.report.util.XmlMarshaller;
+import hu.agnos.report.util.XmlParser;
+import hu.agnos.report.entity.Report;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,29 +40,13 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private final Logger logger;
-    private final String reportDirectoriURI;
+    private final String reportDirectoryURI;
     private final String xsdURI;
 
     public ReportRepository() {
         logger = LoggerFactory.getLogger(ReportRepository.class);
-
-        final String AGNOS_HOME = System.getenv("AGNOS_HOME");
-
-        if (AGNOS_HOME.endsWith("/")) {
-            this.reportDirectoriURI = new StringBuilder(AGNOS_HOME)
-                    .append("AgnosReportingServer/Meta")
-                    .toString();
-            this.xsdURI = new StringBuilder(AGNOS_HOME)
-                    .append("global/conf/report.xsd")
-                    .toString();
-        } else {
-            this.reportDirectoriURI = new StringBuilder(AGNOS_HOME)
-                    .append("/AgnosReportingServer/Meta")
-                    .toString();
-            this.xsdURI = new StringBuilder(AGNOS_HOME)
-                    .append("/global/conf/report.xsd")
-                    .toString();
-        }
+        this.reportDirectoryURI = System.getenv("AGNOS_META_DIR");
+        this.xsdURI = System.getenv("AGNOS_XSD_URI");
     }
 
     @Override
@@ -78,7 +63,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                     SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
                     SAXParser saxParser = saxParserFactory.newSAXParser();
                     XmlParser handler = new XmlParser();
-                    saxParser.parse(new File(reportDirectoriURI + "/" + reportFileName), handler);
+                    saxParser.parse(new File(reportDirectoryURI, reportFileName), handler);
                     Report report = handler.getReport();
                     String reportFullName = new StringBuilder()
                             .append(report.getCubeName())
@@ -123,7 +108,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public List<Report> findAll() {
         Map<String, Report> tempReportStore = new HashMap<>();
-        final File folder = new File(reportDirectoriURI);
+        final File folder = new File(reportDirectoryURI);
         for (final File fileEntry : folder.listFiles()) {
             String fileName = fileEntry.getName();
 
@@ -133,7 +118,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                     try {
                         SAXParser saxParser = saxParserFactory.newSAXParser();
                         XmlParser handler = new XmlParser();
-                        saxParser.parse(new File(reportDirectoriURI + "/" + fileName), handler);
+                        saxParser.parse(new File(reportDirectoryURI, fileName), handler);
                         storeCubeReports(tempReportStore, handler.getReport());
                     } catch (ParserConfigurationException | SAXException | IOException e) {
                         logger.error(e.getMessage());
@@ -168,7 +153,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                 .append(report.getName())
                 .append(".report.xml")
                 .toString();
-        File file = new File(this.reportDirectoriURI + "/" + reportFullName);
+        File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
         }
@@ -183,7 +168,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                 .append(reportName)
                 .append(".report.xml")
                 .toString();
-        File file = new File(this.reportDirectoriURI + "/" + reportFullName);
+        File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
         }
@@ -222,7 +207,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                 .append(report.getName())
                 .append(".report.xml")
                 .toString();
-        if (XmlMarshaller.marshal(report, this.reportDirectoriURI + "/" + reportFullName)) {
+        if (XmlMarshaller.marshal(report, this.reportDirectoryURI + "/" + reportFullName)) {
             return s;
         } else {
             return null;
@@ -277,7 +262,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     private boolean validateXML(String reportFileName) {
         try {
-            Source xmlFile = new StreamSource(new File(this.reportDirectoriURI + "/" + reportFileName));
+            Source xmlFile = new StreamSource(new File(this.reportDirectoryURI, reportFileName));
             SchemaFactory schemaFactory = SchemaFactory
                     .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaFactory
