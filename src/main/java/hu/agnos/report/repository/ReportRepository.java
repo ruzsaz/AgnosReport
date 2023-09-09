@@ -5,7 +5,6 @@
  */
 package hu.agnos.report.repository;
 
-//import hu.mi.agnos.report.entity.Cube;
 import hu.agnos.report.util.XmlMarshaller;
 import hu.agnos.report.util.XmlParser;
 import hu.agnos.report.entity.Report;

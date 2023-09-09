@@ -174,7 +174,7 @@ public class XmlMarshaller {
 
     private static void levelWriter(XMLStreamWriter xsw, Level level) throws XMLStreamException {
         xsw.writeStartElement("Level");
-        xsw.writeAttribute("order", Integer.toString(level.getDepth()));
+        xsw.writeAttribute("depth", Integer.toString(level.getDepth()));
         xsw.writeAttribute("idColumnName", XmlEscaper.escape(level.getIdColumnName()));
         xsw.writeAttribute("codeColumnName", XmlEscaper.escape(level.getCodeColumnName()));
         xsw.writeAttribute("nameColumnName", XmlEscaper.escape(level.getNameColumnName()));
