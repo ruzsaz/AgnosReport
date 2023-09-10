@@ -97,9 +97,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
         List<Report> result = new ArrayList<>();
         for (String reportFileName : reportFileNames) {
             Optional<Report> optReport = findById(reportFileName);
-            if (optReport.isPresent()) {
-                result.add(optReport.get());
-            }
+            optReport.ifPresent(result::add);
         }
         return result;
     }
@@ -111,7 +109,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
         for (final File fileEntry : folder.listFiles()) {
             String fileName = fileEntry.getName();
 
-            if (fileName.toLowerCase().endsWith(".report.xml")) {;
+            if (fileName.toLowerCase().endsWith(".report.xml")) {
                 if (validateXML(fileName)) {
                     SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
                     try {
@@ -198,15 +196,13 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public <S extends Report> S save(S s) {
         Assert.notNull(s, "Entity must not be null.");
-        Report report = (Report) s;
-
         String reportFullName = new StringBuilder()
-                .append(report.getCubeName())
+                .append(s.getCubeName())
                 .append(".")
-                .append(report.getName())
+                .append(s.getName())
                 .append(".report.xml")
                 .toString();
-        if (XmlMarshaller.marshal(report, this.reportDirectoryURI + "/" + reportFullName)) {
+        if (XmlMarshaller.marshal(s, this.reportDirectoryURI + "/" + reportFullName)) {
             return s;
         } else {
             return null;
@@ -253,9 +249,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                 .append(report.getName().toUpperCase())
                 .toString();
 
-        if (storage.containsKey(reportKey)) {
-            storage.remove(reportKey);
-        }
+        storage.remove(reportKey);
         storage.put(reportKey, report);
     }
 

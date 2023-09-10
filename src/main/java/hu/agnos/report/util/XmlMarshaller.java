@@ -12,7 +12,6 @@ import hu.agnos.report.entity.Report;
 import hu.agnos.report.entity.Visualization;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,6 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -50,7 +48,7 @@ public class XmlMarshaller {
         boolean result = true;
         try {
             reportWriter(report, filePath);
-            xmlFormater(filePath);
+            xmlFormatter(filePath);
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             logger.error(ex.getMessage());
             result = false;
@@ -58,16 +56,16 @@ public class XmlMarshaller {
         return result;
     }
 
-    private static void xmlFormater(String filePath) throws ParserConfigurationException, FileNotFoundException, SAXException, IOException, TransformerConfigurationException, TransformerException {
+    private static void xmlFormatter(String filePath) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new InputStreamReader(new FileInputStream(filePath))));
-        Transformer xformer = TransformerFactory.newInstance().newTransformer();
-        xformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         Source source = new DOMSource(document);
         Result result = new StreamResult(new File(filePath));
-        xformer.transform(source, result);
+        transformer.transform(source, result);
     }
 
     private static void reportWriter(Report r, String filePath) {
@@ -81,7 +79,7 @@ public class XmlMarshaller {
             xsw.writeAttribute("cubeUniqueName", XmlEscaper.escape(r.getCubeName()));
             xsw.writeAttribute("reportUniqueName", XmlEscaper.escape(r.getName()));
             xsw.writeAttribute("dataUpdatedBy", XmlEscaper.escape(r.getUpdatedBy()));
-            xsw.writeAttribute("databaseType", r.getDatabaseType());
+            xsw.writeAttribute("databaseType", XmlEscaper.escape(r.getDatabaseType()));
             xsw.writeAttribute("roleToAccess", XmlEscaper.escape(r.getRoleToAccess()));
             for (int i = 0; i < r.getLanguageCount(); i++) {
                 xsw.writeStartElement("ReportLabels");
@@ -120,8 +118,8 @@ public class XmlMarshaller {
 
             if (r.isAdditionalCalculation()) {
                 xsw.writeStartElement("AdditionalCalculation");
-                xsw.writeAttribute("function", r.getAdditionalCalculation().getFunction());
-                xsw.writeAttribute("args", r.getAdditionalCalculation().getArgs());
+                xsw.writeAttribute("function", XmlEscaper.escape(r.getAdditionalCalculation().getFunction()));
+                xsw.writeAttribute("args", XmlEscaper.escape(r.getAdditionalCalculation().getArgs()));
                 xsw.writeEndElement();
             }
             xsw.writeEndElement();
@@ -142,7 +140,7 @@ public class XmlMarshaller {
     }
 
     private static void hierarchyWriter(XMLStreamWriter xsw, Hierarchy hierarchy, ArrayList<String> languages) throws XMLStreamException {
-        if (hierarchy.getHierarchyUniqueName() != null && !hierarchy.getHierarchyUniqueName().equals("")) {
+        if (hierarchy.getHierarchyUniqueName() != null && !hierarchy.getHierarchyUniqueName().isEmpty()) {
             xsw.writeStartElement("Hierarchy");
             xsw.writeAttribute("id", Integer.toString(hierarchy.getId()));
             xsw.writeAttribute("uniqueName", XmlEscaper.escape(hierarchy.getHierarchyUniqueName()));
@@ -154,7 +152,7 @@ public class XmlMarshaller {
 
             for (int i = 0; i < languages.size(); i++) {
                 xsw.writeStartElement("HierarchyNames");
-                xsw.writeAttribute("lang", languages.get(i));
+                xsw.writeAttribute("lang", XmlEscaper.escape(languages.get(i)));
                 xsw.writeAttribute("caption", XmlEscaper.escape(hierarchy.getCaptions().get(i)));
                 xsw.writeAttribute("description", XmlEscaper.escape(hierarchy.getDescriptions().get(i)));
                 xsw.writeAttribute("topLevelString", XmlEscaper.escape(hierarchy.getToplevelStrings().get(i)));
@@ -182,7 +180,7 @@ public class XmlMarshaller {
     }
 
     private static void visualizationWriter(XMLStreamWriter xsw, Visualization visualization) throws XMLStreamException {
-        if (visualization.getInitString() != null && !visualization.getInitString().equals("")) {
+        if (visualization.getInitString() != null && !visualization.getInitString().isEmpty()) {
             xsw.writeStartElement("Visualization");
             xsw.writeAttribute("initString", XmlEscaper.escape(visualization.getInitString()));
             xsw.writeAttribute("order", Integer.toString(visualization.getOrder()));
@@ -191,7 +189,7 @@ public class XmlMarshaller {
     }
 
     private static void indicatorWriter(XMLStreamWriter xsw, Indicator indicator, ArrayList<String> languages) throws XMLStreamException {
-        if (indicator.getValue().getMeasureUniqueName() != null && !indicator.getValue().getMeasureUniqueName().equals("")) {
+        if (indicator.getValue().getMeasureUniqueName() != null && !indicator.getValue().getMeasureUniqueName().isEmpty()) {
             xsw.writeStartElement("Indicator");
             xsw.writeAttribute("id", Integer.toString(indicator.getId()));
             xsw.writeAttribute("valueUniqueName", XmlEscaper.escape(indicator.getValue().getMeasureUniqueName()));
