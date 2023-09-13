@@ -259,7 +259,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             SchemaFactory schemaFactory = SchemaFactory
                     .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaFactory
-                    .newSchema(new File(this.xsdURI));
+                    .newSchema(getClass().getResource("/report.xsd"));
             Validator validator = schema.newValidator();
             validator.validate(xmlFile);
             return true;
