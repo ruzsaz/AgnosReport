@@ -40,12 +40,10 @@ public class ReportRepository implements CrudRepository<Report, String> {
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private final Logger logger;
     private final String reportDirectoryURI;
-    private final String xsdURI;
 
     public ReportRepository() {
         logger = LoggerFactory.getLogger(ReportRepository.class);
-        this.reportDirectoryURI = System.getenv("AGNOS_META_DIR");
-        this.xsdURI = System.getenv("AGNOS_XSD_URI");
+        this.reportDirectoryURI = System.getenv("AGNOS_REPORTS_DIR");
     }
 
     @Override
