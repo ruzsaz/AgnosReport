@@ -5,6 +5,7 @@
  */
 package hu.agnos.report.util;
 
+import hu.agnos.report.entity.ExtraCalculation;
 import hu.agnos.report.entity.Indicator;
 import hu.agnos.report.entity.AdditionalCalculation;
 import hu.agnos.report.entity.Hierarchy;
@@ -27,6 +28,7 @@ public class XmlParser extends DefaultHandler {
     private Hierarchy hierarchy = null;
 
     private boolean bReportHelp;
+    private StringBuffer helpBuilder;
     private String reportHelpLang;
 
     public Report getReport() {
@@ -35,21 +37,17 @@ public class XmlParser extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-
         if (qName.equalsIgnoreCase("Report")) {
             String cubeUniqueName = XmlEscaper.unescape(attributes.getValue("cubeUniqueName"));
             String reportUniqueName = XmlEscaper.unescape(attributes.getValue("reportUniqueName"));
-          
             String dataUpdatedBy = XmlEscaper.unescape(attributes.getValue("dataUpdatedBy"));
             String databaseType = XmlEscaper.unescape(attributes.getValue("databaseType"));
             String roleToAccess = XmlEscaper.unescape(attributes.getValue("roleToAccess"));
             report = new Report(reportUniqueName, cubeUniqueName, dataUpdatedBy, databaseType, roleToAccess);
             report.setRoleToAccess(roleToAccess);
-
         }
 
-        else if (qName.equalsIgnoreCase(
-                "ReportLabels") && report != null) {
+        else if (qName.equalsIgnoreCase("ReportLabels") && report != null) {
             String lang = XmlEscaper.unescape(attributes.getValue("lang"));
             String caption = XmlEscaper.unescape(attributes.getValue("caption"));
             String description = XmlEscaper.unescape(attributes.getValue("description"));
@@ -63,12 +61,11 @@ public class XmlParser extends DefaultHandler {
             report.getDescriptions().set(langIdx, description);
             report.getDatasource().set(langIdx, datasource);
 
-        } else if (qName.equalsIgnoreCase(
-                "ReportHelp")) {
+        } else if (qName.equalsIgnoreCase("ReportHelp")) {
             reportHelpLang = XmlEscaper.unescape(attributes.getValue("lang"));
+            helpBuilder = new StringBuffer();
             bReportHelp = true;
-        } else if (qName.equalsIgnoreCase(
-                "Indicator")) {
+        } else if (qName.equalsIgnoreCase("Indicator")) {
             int id = Integer.parseInt(attributes.getValue("id"));
 
             String valueUniqueName = XmlEscaper.unescape(attributes.getValue("valueUniqueName"));
@@ -87,8 +84,7 @@ public class XmlParser extends DefaultHandler {
             Measure denominator = new Measure(languageCnt, denominatorUniqueName, denominatorSign, denominatorIsHidden);
             indicator = new Indicator(languageCnt, id, value, denominator, denominatorMultiplier);
             report.addIndicator(indicator);
-        } else if (qName.equalsIgnoreCase(
-                "IndicatorLabels")) {
+        } else if (qName.equalsIgnoreCase("IndicatorLabels")) {
             String lang = XmlEscaper.unescape(attributes.getValue("lang"));
             String caption = XmlEscaper.unescape(attributes.getValue("caption"));
             String description = XmlEscaper.unescape(attributes.getValue("description"));
@@ -119,15 +115,18 @@ public class XmlParser extends DefaultHandler {
             this.indicator.getDenominator().getUnits().set(langIdx, denominatorUnit);
             this.indicator.getDenominator().getUnitPlurals().set(langIdx, denominatorUnitPlural);
 
-        } else if (qName.equalsIgnoreCase(
-                "Visualization")) {
+        } else if (qName.equalsIgnoreCase("ExtraCalculation")) {
+            String function = XmlEscaper.unescape(attributes.getValue("function"));
+            String args = XmlEscaper.unescape(attributes.getValue("args"));
+            ExtraCalculation ec = new ExtraCalculation(function, args);
+            this.indicator.setExtraCalculation(ec);
+        } else if (qName.equalsIgnoreCase("Visualization")) {
             String initString = XmlEscaper.unescape(attributes.getValue("initString"));
             int order = Integer.parseInt(attributes.getValue("order"));
             Visualization visualization = new Visualization(initString, order);
             report.addVisualization(visualization);
 
-        } else if (qName.equalsIgnoreCase(
-                "Hierarchy")) {
+        } else if (qName.equalsIgnoreCase("Hierarchy")) {
             int id = Integer.parseInt(attributes.getValue("id"));
             String uniqueName = XmlEscaper.unescape(attributes.getValue("uniqueName"));
             String type = XmlEscaper.unescape(attributes.getValue("type"));
@@ -137,8 +136,7 @@ public class XmlParser extends DefaultHandler {
 
             hierarchy = new Hierarchy(languageNumber, id, uniqueName, type, allowedDepth);
             report.addHierarchy(hierarchy);
-        } else if (qName.equalsIgnoreCase(
-                "HierarchyNames")) {
+        } else if (qName.equalsIgnoreCase("HierarchyNames")) {
             String lang = XmlEscaper.unescape(attributes.getValue("lang"));
 
             String caption = XmlEscaper.unescape(attributes.getValue("caption"));
@@ -155,38 +153,34 @@ public class XmlParser extends DefaultHandler {
             hierarchy.getDescriptions().set(langIdx, description);
             hierarchy.getToplevelStrings().set(langIdx, topLevelString);
 
-        } else if (qName.equalsIgnoreCase(
-                "Level")) {
+        } else if (qName.equalsIgnoreCase("Level")) {
             int depth = Integer.parseInt(attributes.getValue("depth"));
             String idColumnName = XmlEscaper.unescape(attributes.getValue("idColumnName"));
             String codeColumnName = XmlEscaper.unescape(attributes.getValue("codeColumnName"));
             String nameColumnName = XmlEscaper.unescape(attributes.getValue("nameColumnName"));
             Level level = new Level(depth, idColumnName, codeColumnName, nameColumnName);
             hierarchy.addLevel(level);
-
-        } else if (qName.equalsIgnoreCase(
-                "AdditionalCalculation")) {
-            String function = XmlEscaper.unescape(attributes.getValue("function"));
-            String args = XmlEscaper.unescape(attributes.getValue("args"));
-            AdditionalCalculation ac = new AdditionalCalculation(function, args);
-            report.setAdditionalCalculation(ac);
         }
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) {
-
-        if (bReportHelp) {
-            //age element, set Employee age
-            String reportHelp = new String(ch, start, length);
-
+    public void endElement(String uri, String localName, String qName) {
+        if (qName.equalsIgnoreCase("ReportHelp")) {
             int langIdx = report.getLanguageIdx(this.reportHelpLang);
             if (langIdx < 0) {
                 report.addLanguage(this.reportHelpLang);
                 langIdx = report.getLanguageIdx(this.reportHelpLang);
             }
+            String reportHelp = helpBuilder.toString();
             this.report.getHelps().set(langIdx, reportHelp);
             bReportHelp = false;
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (bReportHelp) {
+            helpBuilder.append(ch, start, length);
         }
     }
    

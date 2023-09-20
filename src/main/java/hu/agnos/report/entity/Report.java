@@ -130,10 +130,11 @@ public class Report {
     }
 
     public void setHelps(ArrayList<String> helps) {
-        this.helps = new ArrayList<>(helps);
+        this.helps = new ArrayList<>();
         for (String h : helps) {
-            h = h.replaceAll("<!\\[CDATA\\[", "").replaceAll("\\]\\]>", "");
+            helps.add(h.replaceAll("<!\\[CDATA\\[", "").replaceAll("\\]\\]>", ""));
         }
+
     }
 
     public ArrayList<String> getEscapedHelps() {
@@ -304,15 +305,21 @@ public class Report {
     }
 
     public AdditionalCalculation getAdditionalCalculation() {
-        return additionalCalculation;
-    }
-
-    public void setAdditionalCalculation(AdditionalCalculation additionalCalculation) {
-        this.additionalCalculation = additionalCalculation;
+        for (Indicator ind : indicators) {
+            if (ind.hasExtraCalculation()) {
+                return new AdditionalCalculation(ind.getExtraCalculation().getFunction(), ind.getExtraCalculation().getArgs() + "," + ind.getValue().getMeasureUniqueName());
+            }
+        }
+        return null;
     }
 
     public boolean isAdditionalCalculation() {
-        return this.additionalCalculation != null;
+        for (Indicator ind : indicators) {
+            if (ind.hasExtraCalculation()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

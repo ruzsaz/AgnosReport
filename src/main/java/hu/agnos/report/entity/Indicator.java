@@ -20,6 +20,8 @@ public class Indicator {
     private Measure value;
     private Double multiplier;
 
+    private ExtraCalculation extraCalculation;
+
     public Indicator(int languageNumber) {
         this.captions = new ArrayList<>();
         this.descriptions = new ArrayList<>();
@@ -27,6 +29,7 @@ public class Indicator {
             captions.add("");
             descriptions.add("");
         }
+        this.extraCalculation = new ExtraCalculation();
     }
 
     public Indicator(int languageNumber, Double multiplier) {
@@ -89,6 +92,18 @@ public class Indicator {
         this.multiplier = multiplier;
     }
 
+    public ExtraCalculation getExtraCalculation() {
+        return extraCalculation;
+    }
+
+    public void setExtraCalculation(ExtraCalculation extraCalculation) {
+        this.extraCalculation = extraCalculation;
+    }
+
+    public boolean hasExtraCalculation() {
+        return !"".equals(this.extraCalculation.getFunction());
+    }
+
     public void addLanguage() {
         this.captions.add("");
         this.descriptions.add("");
@@ -107,6 +122,7 @@ public class Indicator {
         Indicator result = new Indicator(captions.size(), id, value.deepCopy(), denominator.deepCopy(), multiplier);
         result.setCaptions(new ArrayList<>(captions));
         result.setDescriptions(new ArrayList<>(descriptions));
+        result.setExtraCalculation(extraCalculation);
         return result;
     }
 

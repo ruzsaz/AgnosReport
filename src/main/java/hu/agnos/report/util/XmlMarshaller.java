@@ -115,13 +115,6 @@ public class XmlMarshaller {
                 hierarchyWriter(xsw, h, r.getLanguages());
             }
             xsw.writeEndElement();
-
-            if (r.isAdditionalCalculation()) {
-                xsw.writeStartElement("AdditionalCalculation");
-                xsw.writeAttribute("function", XmlEscaper.escape(r.getAdditionalCalculation().getFunction()));
-                xsw.writeAttribute("args", XmlEscaper.escape(r.getAdditionalCalculation().getArgs()));
-                xsw.writeEndElement();
-            }
             xsw.writeEndElement();
             xsw.writeEndDocument();
             xsw.flush();
@@ -199,6 +192,13 @@ public class XmlMarshaller {
             xsw.writeAttribute("denominatorIsHidden", Boolean.toString(indicator.getDenominator().isHidden()));
             xsw.writeAttribute("denominatorMultiplier", Double.toString(indicator.getMultiplier()));
             xsw.writeAttribute("denominatorSign", Integer.toString(indicator.getDenominator().getSign()));
+
+            if (indicator.hasExtraCalculation()) {
+                xsw.writeStartElement("ExtraCalculation");
+                xsw.writeAttribute("function", XmlEscaper.escape(indicator.getExtraCalculation().getFunction()));
+                xsw.writeAttribute("args", XmlEscaper.escape(indicator.getExtraCalculation().getArgs()));
+                xsw.writeEndElement();
+            }
 
             for (int i = 0; i < languages.size(); i++) {
                 xsw.writeStartElement("IndicatorLabels");
