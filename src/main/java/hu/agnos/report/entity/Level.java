@@ -60,8 +60,7 @@ public class Level {
     }
         
     public Level deepCopy() {
-        Level result = new Level(depth, idColumnName, codeColumnName, nameColumnName);
-        return result;
+        return new Level(depth, idColumnName, codeColumnName, nameColumnName);
     }
 
 }

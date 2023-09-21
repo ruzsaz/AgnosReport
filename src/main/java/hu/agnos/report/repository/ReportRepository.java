@@ -62,11 +62,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                     XmlParser handler = new XmlParser();
                     saxParser.parse(new File(reportDirectoryURI, reportFileName), handler);
                     Report report = handler.getReport();
-                    String reportFullName = new StringBuilder()
-                            .append(report.getCubeName())
-                            .append(".")
-                            .append(report.getName())
-                            .toString();
+                    String reportFullName = report.getCubeName() + "." + report.getName();
                     if (reportFullName.equals(huntedReportFullName)) {
                         result = report;
                     }
@@ -80,12 +76,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     }
 
     public Optional<Report> findById(String cubeName, String reportName) {
-        String reportFileName = new StringBuilder()
-                .append(cubeName)
-                .append(".")
-                .append(reportName)
-                .append(".report.xml")
-                .toString();
+        String reportFileName = cubeName + "." + reportName + ".report.xml";
         return findById(reportFileName);
     }
 
@@ -142,12 +133,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public void delete(Report report) {
         Assert.notNull(report, ID_MUST_NOT_BE_NULL);
-        String reportFullName = new StringBuilder()
-                .append(report.getCubeName())
-                .append(".")
-                .append(report.getName())
-                .append(".report.xml")
-                .toString();
+        String reportFullName = report.getCubeName() + "." + report.getName() + ".report.xml";
         File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
@@ -157,12 +143,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     public void deleteById(String cubeName, String reportName) {
         Assert.notNull(cubeName, ID_MUST_NOT_BE_NULL);
         Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
-        String reportFullName = new StringBuilder()
-                .append(cubeName)
-                .append(".")
-                .append(reportName)
-                .append(".report.xml")
-                .toString();
+        String reportFullName = cubeName + "." + reportName + ".report.xml";
         File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
@@ -194,12 +175,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public <S extends Report> S save(S s) {
         Assert.notNull(s, "Entity must not be null.");
-        String reportFullName = new StringBuilder()
-                .append(s.getCubeName())
-                .append(".")
-                .append(s.getName())
-                .append(".report.xml")
-                .toString();
+        String reportFullName = s.getCubeName() + "." + s.getName() + ".report.xml";
         if (XmlMarshaller.marshal(s, this.reportDirectoryURI + "/" + reportFullName)) {
             return s;
         } else {
@@ -241,12 +217,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     }
 
     private void storeCubeReports(Map<String, Report> storage, Report report) {
-        String reportKey = new StringBuilder()
-                .append(report.getCubeName().toUpperCase())
-                .append(".")
-                .append(report.getName().toUpperCase())
-                .toString();
-
+        String reportKey = report.getCubeName().toUpperCase() + "." + report.getName().toUpperCase();
         storage.remove(reportKey);
         storage.put(reportKey, report);
     }

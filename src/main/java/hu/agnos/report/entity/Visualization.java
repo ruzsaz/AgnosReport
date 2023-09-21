@@ -44,8 +44,7 @@ public class Visualization {
     }
 
     public Visualization deepCopy() {
-        Visualization result = new Visualization(initString, order);
-        return result;
+        return new Visualization(initString, order);
     }
 
    @Override

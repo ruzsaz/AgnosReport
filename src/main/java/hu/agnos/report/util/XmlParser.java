@@ -6,9 +6,8 @@
 package hu.agnos.report.util;
 
 import hu.agnos.report.entity.ExtraCalculation;
-import hu.agnos.report.entity.Indicator;
-import hu.agnos.report.entity.AdditionalCalculation;
 import hu.agnos.report.entity.Hierarchy;
+import hu.agnos.report.entity.Indicator;
 import hu.agnos.report.entity.Level;
 import hu.agnos.report.entity.Measure;
 import hu.agnos.report.entity.Report;
