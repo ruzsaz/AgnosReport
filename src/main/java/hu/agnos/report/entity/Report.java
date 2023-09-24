@@ -17,6 +17,7 @@ public class Report {
     private String updatedBy;
     private String databaseType;
     private String roleToAccess;
+    private boolean isBroken;
 
     private ArrayList<String> captions;
     private ArrayList<String> descriptions;
@@ -42,6 +43,7 @@ public class Report {
         this.visualizations = new ArrayList<>();
         this.additionalCalculation = null;
         this.updatedBy = "SYSTEM_USER";
+        this.isBroken = false;
     }
 
     public Report(String name) {
@@ -107,6 +109,14 @@ public class Report {
 
     public void setRoleToAccess(String roleToAccess) {
         this.roleToAccess = roleToAccess;
+    }
+
+    public boolean isBroken() {
+        return isBroken;
+    }
+
+    public void setBroken(boolean broken) {
+        isBroken = broken;
     }
 
     public ArrayList<String> getCaptions() {
