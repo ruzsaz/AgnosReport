@@ -12,11 +12,17 @@
             <version>1.1.1</version>
             <type>jar</type>
         </dependency>
+        <!-- API --> 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
-            <type>jar</type>
+            <version>2.0.9</version>
+        </dependency>
+        <!-- SLF4J Provider -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -28,6 +34,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.13.0</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>

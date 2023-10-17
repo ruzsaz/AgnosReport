@@ -4,51 +4,30 @@
  * and open the template in the editor.
  */
 package hu.agnos.report.entity;
-//OK
+
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author parisek
  */
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Visualization {
 
+    @JacksonXmlProperty(isAttribute = true)
     private String initString;
-    private int order;
-
-    public Visualization() {
-    }
-
-    public Visualization(String initString) {
-        this.initString = initString;
-    }
-
-    public Visualization(String initString, int order) {
-        this.initString = initString;
-        this.order = order;
-    }
-
-    public String getInitString() {
-        return initString;
-    }
-
-    public void setInitString(String initString) {
-        this.initString = initString;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
 
     public Visualization deepCopy() {
-        return new Visualization(initString, order);
+        return new Visualization(initString);
     }
 
-   @Override
-    public String toString() {
-        return initString;
-    }
 }

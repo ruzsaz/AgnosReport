@@ -5,125 +5,105 @@
  */
 package hu.agnos.report.entity;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author parisek
  */
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Indicator {
 
-    private int id;
-    private ArrayList<String> captions;
-    private ArrayList<String> descriptions;
-    private Measure denominator;
-    private Measure value;
-    private Double multiplier;
+    @JacksonXmlProperty(isAttribute = true)
+    private String denominatorName;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private String denominatorCubeName;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private double denominatorMultiplier;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String denominatorSign;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private boolean denominatorIsHidden;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String valueName;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String valueCubeName;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private boolean valueIsHidden;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String valueSign;
+
+    @JacksonXmlProperty(localName = "ExtraCalculation")
     private ExtraCalculation extraCalculation;
 
+    @JacksonXmlProperty(localName = "Labels")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private ArrayList<IndicatorLabels> multilingualization;
+
     public Indicator(int languageNumber) {
-        this.captions = new ArrayList<>();
-        this.descriptions = new ArrayList<>();
+        this.multilingualization = new ArrayList<>();
         for (int i = 0; i < languageNumber; i++) {
-            captions.add("");
-            descriptions.add("");
+            this.multilingualization.add(new IndicatorLabels());
         }
         this.extraCalculation = new ExtraCalculation();
     }
 
     public Indicator(int languageNumber, Double multiplier) {
         this(languageNumber);
-        this.multiplier = multiplier;
+        this.denominatorMultiplier = multiplier;
     }
 
-    public Indicator(int languageNumber, int id, Measure value, Measure denominator, Double multiplier) {
+    public Indicator(int languageNumber, String denominatorName, String denominatorCubeName, double multiplier, String denominatorSign, boolean denominatorIsHidden, String valueName, String valueCubeName, boolean valueIsHidden, String valueSign) {
         this(languageNumber, multiplier);
-        this.id = id;
-        this.denominator = denominator;
-        this.value = value;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public ArrayList<String> getCaptions() {
-        return captions;
-    }
-
-    public void setCaptions(ArrayList<String> captions) {
-        this.captions = captions;
-    }
-
-    public ArrayList<String> getDescriptions() {
-        return descriptions;
-    }
-
-    public void setDescriptions(ArrayList<String> descriptions) {
-        this.descriptions = descriptions;
-    }
-
-    public Measure getDenominator() {
-        return denominator;
-    }
-
-    public void setDenominator(Measure denominator) {
-        this.denominator = denominator;
-    }
-
-    public Measure getValue() {
-        return value;
-    }
-
-    public void setValue(Measure value) {
-        this.value = value;
-    }
-
-    public Double getMultiplier() {
-        return multiplier;
-    }
-
-    public void setMultiplier(Double multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    public ExtraCalculation getExtraCalculation() {
-        return extraCalculation;
-    }
-
-    public void setExtraCalculation(ExtraCalculation extraCalculation) {
-        this.extraCalculation = extraCalculation;
+        this.denominatorName = denominatorName;
+        this.denominatorCubeName = denominatorCubeName;
+        this.denominatorSign = denominatorSign;
+        this.denominatorIsHidden = denominatorIsHidden;
+        this.valueName = valueName;
+        this.valueCubeName = valueCubeName;
+        this.valueIsHidden = valueIsHidden;
+        this.valueSign = valueSign;
     }
 
     public boolean hasExtraCalculation() {
         return !"".equals(this.extraCalculation.getFunction());
     }
 
-    public void addLanguage() {
-        this.captions.add("");
-        this.descriptions.add("");
-        this.value.addLanguage();
-        this.denominator.addLanguage();
+    public void addLanguage(String lang) {
+        this.multilingualization.add(new IndicatorLabels(lang));
     }
 
     public void removeLanguage(int index) {
-        this.captions.remove(index);
-        this.descriptions.remove(index);
-        this.value.removeLanguage(index);
-        this.denominator.removeLanguage(index);
+        this.multilingualization.remove(index);
     }
 
     public Indicator deepCopy() {
-        Indicator result = new Indicator(captions.size(), id, value.deepCopy(), denominator.deepCopy(), multiplier);
-        result.setCaptions(new ArrayList<>(captions));
-        result.setDescriptions(new ArrayList<>(descriptions));
+        Indicator result = new Indicator(this.multilingualization.size(), denominatorName, denominatorCubeName, denominatorMultiplier, denominatorSign, denominatorIsHidden, valueName, valueCubeName, valueIsHidden, valueSign);
+        result.setMultilingualization(new ArrayList<>(multilingualization));
         result.setExtraCalculation(extraCalculation);
         return result;
     }
 
+    
+    
 }

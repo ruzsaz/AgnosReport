@@ -5,8 +5,9 @@
  */
 package hu.agnos.report.repository;
 
-import hu.agnos.report.util.XmlMarshaller;
-import hu.agnos.report.util.XmlParser;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import hu.agnos.report.entity.Report;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -46,6 +48,11 @@ public class ReportRepository implements CrudRepository<Report, String> {
         this.reportDirectoryURI = System.getenv("AGNOS_REPORTS_DIR");
     }
 
+    public Optional<Report> findByName(String reportName) {
+        Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
+        return findById(reportName + ".report.xml");
+    }
+    
     @Override
     public Optional<Report> findById(String reportFileName) {
         Assert.notNull(reportFileName, ID_MUST_NOT_BE_NULL);
@@ -53,31 +60,15 @@ public class ReportRepository implements CrudRepository<Report, String> {
         if (reportFileName.toLowerCase().endsWith(".report.xml")) {
             if (validateXML(reportFileName)) {
                 try {
-                    String huntedReportFullName = reportFileName
-                            .replaceAll(".report.xml", "")
-                            .replaceAll(".REPORT.XML", "");
-
-                    SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-                    SAXParser saxParser = saxParserFactory.newSAXParser();
-                    XmlParser handler = new XmlParser();
-                    saxParser.parse(new File(reportDirectoryURI, reportFileName), handler);
-                    Report report = handler.getReport();
-                    String reportFullName = report.getCubeName() + "." + report.getName();
-                    if (reportFullName.equals(huntedReportFullName)) {
-                        result = report;
-                    }
-                } catch (ParserConfigurationException | SAXException | IOException e) {
-                    logger.error(e.getMessage());
+                    XmlMapper xmlMapper = new XmlMapper();
+                    result = xmlMapper.readValue(new File(reportDirectoryURI, reportFileName), Report.class);
+                } catch (IOException ex) {
+                    logger.error(ex.getMessage());
                     return Optional.empty();
                 }
             }
         }
         return Optional.ofNullable(result);
-    }
-
-    public Optional<Report> findById(String cubeName, String reportName) {
-        String reportFileName = cubeName + "." + reportName + ".report.xml";
-        return findById(reportFileName);
     }
 
     @Override
@@ -97,24 +88,20 @@ public class ReportRepository implements CrudRepository<Report, String> {
         final File folder = new File(reportDirectoryURI);
         for (final File fileEntry : folder.listFiles()) {
             String fileName = fileEntry.getName();
-
             if (fileName.toLowerCase().endsWith(".report.xml")) {
-                if (validateXML(fileName)) {
-                    SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-                    try {
-                        SAXParser saxParser = saxParserFactory.newSAXParser();
-                        XmlParser handler = new XmlParser();
-                        saxParser.parse(new File(reportDirectoryURI, fileName), handler);
-                        storeCubeReports(tempReportStore, handler.getReport());
-                    } catch (ParserConfigurationException | SAXException | IOException e) {
-                        logger.error(e.getMessage());
-                    }
+                Optional<Report> optReport = findById(fileName);
+                if (optReport.isPresent()) {
+                    storeCubeReports(tempReportStore, optReport.get());
                 }
-
             }
-
         }
         return new ArrayList<>(tempReportStore.values());
+    }
+
+    private void storeCubeReports(Map<String, Report> storage, Report report) {
+        String reportKey = report.getName().toUpperCase();
+        storage.remove(reportKey);
+        storage.put(reportKey, report);
     }
 
     @Override
@@ -133,31 +120,21 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public void delete(Report report) {
         Assert.notNull(report, ID_MUST_NOT_BE_NULL);
-        String reportFullName = report.getCubeName() + "." + report.getName() + ".report.xml";
+        String reportFullName = report.getName() + ".report.xml";
         File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void deleteById(String cubeName, String reportName) {
-        Assert.notNull(cubeName, ID_MUST_NOT_BE_NULL);
+    public void deleteById(String reportName) {
         Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
-        String reportFullName = cubeName + "." + reportName + ".report.xml";
+        String reportFullName = reportName + ".report.xml";
         File file = new File(this.reportDirectoryURI, reportFullName);
         if (file.exists()) {
             file.delete();
         }
 
-    }
-
-    @Override
-    public void deleteById(String reportFileName) {
-        Assert.notNull(reportFileName, ID_MUST_NOT_BE_NULL);
-        Optional<Report> optReport = findById(reportFileName);
-        if (optReport.isPresent()) {
-            delete(optReport.get());
-        }
     }
 
     @Override
@@ -175,12 +152,17 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public <S extends Report> S save(S s) {
         Assert.notNull(s, "Entity must not be null.");
-        String reportFullName = s.getCubeName() + "." + s.getName() + ".report.xml";
-        if (XmlMarshaller.marshal(s, this.reportDirectoryURI + "/" + reportFullName)) {
-            return s;
-        } else {
+        String reportFullName = s.getName() + ".report.xml";
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+            xmlMapper.writeValue(new File(reportDirectoryURI, reportFullName), s);
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
             return null;
         }
+        return s;
     }
 
     @Override
@@ -193,33 +175,6 @@ public class ReportRepository implements CrudRepository<Report, String> {
             }
         }
         return result;
-    }
-
-    public List<String> getReportNamesByCubeName(String cubeName) {
-        List<String> result = new ArrayList<>();
-        for (Report r : findAll()) {
-            if (r.getCubeName().equals(cubeName)) {
-                result.add(r.getName());
-            }
-        }
-        return result;
-    }
-
-    public List<String> getCubeNames() {
-        List<String> result = new ArrayList<>();
-        for (Report r : findAll()) {
-            String cubeName = r.getCubeName();
-            if (!result.contains(cubeName)) {
-                result.add(cubeName);
-            }
-        }
-        return result;
-    }
-
-    private void storeCubeReports(Map<String, Report> storage, Report report) {
-        String reportKey = report.getCubeName().toUpperCase() + "." + report.getName().toUpperCase();
-        storage.remove(reportKey);
-        storage.put(reportKey, report);
     }
 
     private boolean validateXML(String reportFileName) {

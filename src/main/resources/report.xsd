@@ -3,7 +3,19 @@
    <xs:element name="Report">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="ReportLabels" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Cubes">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Cube" minOccurs="1" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:attribute name="name" type="xs:string" use="required" />
+                           <xs:attribute name="databaseType" type="xs:string" use="required" />
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
                <xs:complexType>
                   <xs:attribute name="lang" type="xs:string" use="required" />
                   <xs:attribute name="caption" type="xs:string" use="required" />
@@ -11,7 +23,7 @@
                   <xs:attribute name="datasource" type="xs:string" use="required"  />
                </xs:complexType>
             </xs:element>
-            <xs:element name="ReportHelp" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Help" minOccurs="1" maxOccurs="unbounded">
                <xs:complexType>
                   <xs:simpleContent>
                      <xs:extension base="xs:string">
@@ -32,7 +44,7 @@
                                     <xs:attribute name="args" type="xs:string" use="required" />
                                  </xs:complexType>
                               </xs:element>
-                              <xs:element name="IndicatorLabels" minOccurs="1" maxOccurs="unbounded">
+                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
                                  <xs:complexType>
                                     <xs:attribute name="lang" type="xs:string" use="required" />
                                     <xs:attribute name="caption" type="xs:string" use="required" />
@@ -44,11 +56,12 @@
                                  </xs:complexType>
                               </xs:element>
                            </xs:sequence>
-                           <xs:attribute name="id" type="xs:nonNegativeInteger" use="required" />
-                           <xs:attribute name="valueUniqueName" type="xs:string" use="required" />
+                           <xs:attribute name="valueName" type="xs:string" use="required" />
+                           <xs:attribute name="valueCubeName" type="xs:string" use="required" />
                            <xs:attribute name="valueIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="valueSign" type="xs:decimal" use="required" />
-                           <xs:attribute name="denominatorUniqueName" type="xs:string" use="required" />
+                           <xs:attribute name="denominatorName" type="xs:string" use="required" />
+                           <xs:attribute name="denominatorCubeName" type="xs:string" use="required" />
                            <xs:attribute name="denominatorIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="denominatorSign" type="xs:decimal" use="required" />
                            <xs:attribute name="denominatorMultiplier" type="xs:decimal" use="required" />
@@ -63,7 +76,6 @@
                      <xs:element name="Visualization" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:attribute name="initString" type="xs:string" use="required" />
-                           <xs:attribute name="order" type="xs:nonNegativeInteger" use="required" />
                         </xs:complexType>
                      </xs:element>
                   </xs:sequence>
@@ -75,7 +87,7 @@
                      <xs:element name="Hierarchy" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:sequence>
-                              <xs:element name="HierarchyNames" minOccurs="1" maxOccurs="unbounded">
+                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
                                  <xs:complexType>
                                     <xs:attribute name="lang" type="xs:string" use="required" />
                                     <xs:attribute name="caption" type="xs:string" use="required" />
@@ -83,23 +95,8 @@
                                     <xs:attribute name="topLevelString" type="xs:string" use="required" />
                                  </xs:complexType>
                               </xs:element>
-                              <xs:element name="Levels">
-                                 <xs:complexType>
-                                    <xs:sequence>
-                                       <xs:element name="Level" minOccurs="1" maxOccurs="unbounded">
-                                          <xs:complexType>
-                                             <xs:attribute name="depth" type="xs:nonNegativeInteger" use="required" />
-                                             <xs:attribute name="idColumnName" type="xs:string" use="required" />
-                                             <xs:attribute name="codeColumnName" type="xs:string" use="required" />
-                                             <xs:attribute name="nameColumnName" type="xs:string" use="required" />
-                                          </xs:complexType>
-                                       </xs:element>
-                                    </xs:sequence>
-                                 </xs:complexType>
-                              </xs:element>
                            </xs:sequence>
-                           <xs:attribute name="id" type="xs:nonNegativeInteger" use="required" />
-                           <xs:attribute name="uniqueName" type="xs:string" use="required" />
+                           <xs:attribute name="name" type="xs:string" use="required" />
                            <xs:attribute name="type" type="xs:string" use="optional" />
                            <xs:attribute name="allowedDepth" type="xs:positiveInteger" use="required" />
                         </xs:complexType>
@@ -108,10 +105,7 @@
                </xs:complexType>
             </xs:element>
          </xs:sequence>
-         <xs:attribute name="cubeUniqueName" type="xs:string" use="required" />
-         <xs:attribute name="reportUniqueName" type="xs:string" use="required" />
-         <xs:attribute name="dataUpdatedBy" type="xs:string" use="optional" />
-         <xs:attribute name="databaseType" type="xs:string" use="required" />
+         <xs:attribute name="name" type="xs:string" use="required" />
          <xs:attribute name="roleToAccess" type="xs:string" use="required" />
       </xs:complexType>
    </xs:element>
