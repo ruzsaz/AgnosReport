@@ -1,14 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.agnos.report.repository;
-
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import hu.agnos.report.entity.Report;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import hu.agnos.report.entity.Report;
 import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -90,9 +81,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             String fileName = fileEntry.getName();
             if (fileName.toLowerCase().endsWith(".report.xml")) {
                 Optional<Report> optReport = findById(fileName);
-                if (optReport.isPresent()) {
-                    storeCubeReports(tempReportStore, optReport.get());
-                }
+                optReport.ifPresent(report -> storeCubeReports(tempReportStore, report));
             }
         }
         return new ArrayList<>(tempReportStore.values());
@@ -138,6 +127,11 @@ public class ReportRepository implements CrudRepository<Report, String> {
     }
 
     @Override
+    public void deleteAllById(Iterable<? extends String> ids) {
+        logger.error("Not implemented");
+    }
+
+    @Override
     public void deleteAll(Iterable<? extends Report> reports) {
         for (Report report : reports) {
             delete(report);
@@ -176,6 +170,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
         }
         return result;
     }
+
 
     private boolean validateXML(String reportFileName) {
         try {

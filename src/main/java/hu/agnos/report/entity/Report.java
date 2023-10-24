@@ -1,19 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.ArrayList;
+import java.util.Base64;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -31,7 +29,10 @@ public class Report {
 
     @JacksonXmlProperty(isAttribute = true)
     private String name;
-    
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String databaseType;
+
     @JacksonXmlProperty(isAttribute = true)
     private String roleToAccess;
 
@@ -59,6 +60,8 @@ public class Report {
     @JacksonXmlProperty(localName = "Visualization")
     private ArrayList<Visualization> visualizations;
 
+    private boolean broken;
+
     public Report() {
         this.roleToAccess = "";
         this.cubes = new ArrayList<>();
@@ -67,6 +70,7 @@ public class Report {
         this.indicators = new ArrayList<>();
         this.hierarchies = new ArrayList<>();
         this.visualizations = new ArrayList<>();
+        this.broken = false;
     }
 
     public Report(String name) {
@@ -121,7 +125,7 @@ public class Report {
     @JsonIgnore
     public int getHierarchyIdxByName(String name) {
         for (int i = 0; i < this.hierarchies.size(); i++) {
-            if (this.hierarchies.get(i).getName().toUpperCase().equals(name.toUpperCase())) {
+            if (this.hierarchies.get(i).getName().equalsIgnoreCase(name)) {
                 return i;
             }
         }
@@ -134,6 +138,24 @@ public class Report {
 
     public void addIndicator(Indicator entity) {
         this.indicators.add(entity);
+    }
+
+    public AdditionalCalculation getAdditionalCalculation() {
+        for (Indicator ind : indicators) {
+            if (ind.hasExtraCalculation()) {
+                return new AdditionalCalculation(ind.getExtraCalculation().getFunction(), ind.getExtraCalculation().getArgs() + "," + ind.getValueName());
+            }
+        }
+        return null;
+    }
+
+    public boolean isAdditionalCalculation() {
+        for (Indicator ind : indicators) {
+            if (ind.hasExtraCalculation()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Report deepCopy() {
@@ -152,6 +174,20 @@ public class Report {
             result.visualizations.add(visualization.deepCopy());
         }
         return result;
+    }
+
+    public String asJson() {
+        try {
+            return (new ObjectMapper()).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private static String base64encoder(final String origin) {
+        final byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes());
+        return new String(encodedBytes);
     }
 
 }
