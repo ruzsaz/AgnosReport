@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -23,7 +18,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Indicator {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -86,7 +80,7 @@ public class Indicator {
     }
 
     public boolean hasExtraCalculation() {
-        return !"".equals(this.extraCalculation.getFunction());
+        return !(this.extraCalculation == null || "".equals(this.extraCalculation.getFunction()));
     }
 
     public void addLanguage(String lang) {

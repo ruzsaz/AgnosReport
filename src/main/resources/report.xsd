@@ -81,10 +81,10 @@
                   </xs:sequence>
                </xs:complexType>
             </xs:element>
-            <xs:element name="Hierarchies">
+            <xs:element name="Dimensions">
                <xs:complexType>
                   <xs:sequence>
-                     <xs:element name="Hierarchy" minOccurs="0" maxOccurs="unbounded">
+                     <xs:element name="Dimension" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:sequence>
                               <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">

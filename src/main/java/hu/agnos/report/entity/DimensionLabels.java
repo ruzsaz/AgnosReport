@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class HierarchyLabels {
+public class DimensionLabels {
 
     @JacksonXmlProperty(isAttribute = true)
     private String lang;
@@ -30,7 +30,7 @@ public class HierarchyLabels {
     @JacksonXmlProperty(isAttribute = true)
     private String topLevelString;
 
-    public HierarchyLabels(String lang) {
+    public DimensionLabels(String lang) {
         this.lang = lang;
     }
 

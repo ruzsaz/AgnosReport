@@ -52,9 +52,9 @@ public class Report {
     @JacksonXmlProperty(localName = "Indicator")
     private ArrayList<Indicator> indicators;
 
-    @JacksonXmlElementWrapper(localName = "Hierarchies")
-    @JacksonXmlProperty(localName = "Hierarchy")
-    private ArrayList<Hierarchy> hierarchies;
+    @JacksonXmlElementWrapper(localName = "Dimensions")
+    @JacksonXmlProperty(localName = "Dimension")
+    private ArrayList<Dimension> dimensions;
 
     @JacksonXmlElementWrapper(localName = "Visualizations")
     @JacksonXmlProperty(localName = "Visualization")
@@ -68,7 +68,7 @@ public class Report {
         this.labels = new ArrayList<>();
         this.helps = new ArrayList<>();
         this.indicators = new ArrayList<>();
-        this.hierarchies = new ArrayList<>();
+        this.dimensions = new ArrayList<>();
         this.visualizations = new ArrayList<>();
         this.broken = false;
     }
@@ -106,8 +106,8 @@ public class Report {
         for (Indicator indicator : indicators) {
             indicator.addLanguage(lang);
         }
-        for (Hierarchy hierarchy : hierarchies) {
-            hierarchy.addLanguage(lang);
+        for (Dimension dimension : dimensions) {
+            dimension.addLanguage(lang);
         }
     }
 
@@ -117,15 +117,15 @@ public class Report {
         for (Indicator indicator : indicators) {
             indicator.removeLanguage(index);
         }
-        for (Hierarchy hierarchy : hierarchies) {
-            hierarchy.removeLanguage(index);
+        for (Dimension dimension : dimensions) {
+            dimension.removeLanguage(index);
         }
     }
 
     @JsonIgnore
     public int getHierarchyIdxByName(String name) {
-        for (int i = 0; i < this.hierarchies.size(); i++) {
-            if (this.hierarchies.get(i).getName().equalsIgnoreCase(name)) {
+        for (int i = 0; i < this.dimensions.size(); i++) {
+            if (this.dimensions.get(i).getName().equalsIgnoreCase(name)) {
                 return i;
             }
         }
@@ -167,8 +167,8 @@ public class Report {
         for (Indicator indicator : indicators) {
             result.indicators.add(indicator.deepCopy());
         }
-        for (Hierarchy hierarchy : hierarchies) {
-            result.hierarchies.add(hierarchy.deepCopy());
+        for (Dimension dimension : dimensions) {
+            result.dimensions.add(dimension.deepCopy());
         }
         for (Visualization visualization : visualizations) {
             result.visualizations.add(visualization.deepCopy());

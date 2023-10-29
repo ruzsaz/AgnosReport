@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -19,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Hierarchy {
+public class Dimension {
 
     @JacksonXmlProperty(isAttribute = true)
     private String name;
@@ -32,21 +27,21 @@ public class Hierarchy {
 
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private ArrayList<HierarchyLabels> multilingualization;
+    private ArrayList<DimensionLabels> multilingualization;
 
-    public Hierarchy() {
+    public Dimension() {
         this.name = "";
         this.multilingualization = new ArrayList<>();
     }
 
-    public Hierarchy(int languageNumber) {
+    public Dimension(int languageNumber) {
         this();
         for (int i = 0; i < languageNumber; i++) {
-            this.multilingualization.add(new HierarchyLabels());
+            this.multilingualization.add(new DimensionLabels());
         }
     }
 
-    public Hierarchy(int languageNumber, String hierarchyUniqueName, String type, int allowedDepth) {
+    public Dimension(int languageNumber, String hierarchyUniqueName, String type, int allowedDepth) {
         this(languageNumber);
         this.name = hierarchyUniqueName;
         this.type = type;
@@ -54,15 +49,15 @@ public class Hierarchy {
     }
 
     public void addLanguage(String lang) {
-        this.multilingualization.add(new HierarchyLabels(lang));
+        this.multilingualization.add(new DimensionLabels(lang));
     }
 
     public void removeLanguage(int index) {
         this.multilingualization.remove(index);
     }
 
-    public Hierarchy deepCopy() {
-        Hierarchy result = new Hierarchy(multilingualization.size(), name, type, allowedDepth);
+    public Dimension deepCopy() {
+        Dimension result = new Dimension(multilingualization.size(), name, type, allowedDepth);
         result.setMultilingualization(new ArrayList<>(multilingualization));
         return result;
     }
