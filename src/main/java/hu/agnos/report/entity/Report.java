@@ -123,13 +123,13 @@ public class Report {
     }
 
     @JsonIgnore
-    public int getHierarchyIdxByName(String name) {
-        for (int i = 0; i < this.dimensions.size(); i++) {
-            if (this.dimensions.get(i).getName().equalsIgnoreCase(name)) {
-                return i;
+    public Dimension getDimensionByName(String name) {
+        for (Dimension dimension : this.dimensions) {
+            if (dimension.getName().equalsIgnoreCase(name)) {
+                return dimension;
             }
         }
-        return -1;
+        return null;
     }
 
     public void addVisualization(Visualization entity) {
@@ -183,7 +183,6 @@ public class Report {
             throw new RuntimeException(e);
         }
     }
-
 
     private static String base64encoder(final String origin) {
         final byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes());

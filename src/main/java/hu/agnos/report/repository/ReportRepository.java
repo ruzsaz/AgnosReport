@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -77,7 +78,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     public List<Report> findAll() {
         Map<String, Report> tempReportStore = new HashMap<>();
         final File folder = new File(reportDirectoryURI);
-        for (final File fileEntry : folder.listFiles()) {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             String fileName = fileEntry.getName();
             if (fileName.toLowerCase().endsWith(".report.xml")) {
                 Optional<Report> optReport = findById(fileName);
