@@ -1,14 +1,9 @@
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
- *
  * @author parisek
  */
 @Getter
@@ -23,5 +18,5 @@ public class Cube {
 
     @JacksonXmlProperty(isAttribute = true)
     private String databaseType;
-    
+
 }

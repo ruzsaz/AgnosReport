@@ -7,16 +7,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.ArrayList;
-import java.util.Base64;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
 /**
- *
  * @author parisek
  */
 @Getter
@@ -38,38 +39,38 @@ public class Report {
 
     @JacksonXmlElementWrapper(localName = "Cubes")
     @JacksonXmlProperty(localName = "Cube")
-    private ArrayList<Cube> cubes;
+    private List<Cube> cubes;
 
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private ArrayList<ReportLabels> labels;
+    private List<ReportLabels> labels;
 
     @JacksonXmlProperty(localName = "Help")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private ArrayList<ReportHelp> helps;
+    private List<ReportHelp> helps;
 
     @JacksonXmlElementWrapper(localName = "Indicators")
     @JacksonXmlProperty(localName = "Indicator")
-    private ArrayList<Indicator> indicators;
+    private List<Indicator> indicators;
 
     @JacksonXmlElementWrapper(localName = "Dimensions")
     @JacksonXmlProperty(localName = "Dimension")
-    private ArrayList<Dimension> dimensions;
+    private List<Dimension> dimensions;
 
     @JacksonXmlElementWrapper(localName = "Visualizations")
     @JacksonXmlProperty(localName = "Visualization")
-    private ArrayList<Visualization> visualizations;
+    private List<Visualization> visualizations;
 
     private boolean broken;
 
     public Report() {
         this.roleToAccess = "";
-        this.cubes = new ArrayList<>();
-        this.labels = new ArrayList<>();
-        this.helps = new ArrayList<>();
-        this.indicators = new ArrayList<>();
-        this.dimensions = new ArrayList<>();
-        this.visualizations = new ArrayList<>();
+        this.cubes = new ArrayList<>(3);
+        this.labels = new ArrayList<>(2);
+        this.helps = new ArrayList<>(2);
+        this.indicators = new ArrayList<>(6);
+        this.dimensions = new ArrayList<>(6);
+        this.visualizations = new ArrayList<>(4);
         this.broken = false;
     }
 
@@ -81,6 +82,11 @@ public class Report {
     public Report(String name, String roleToAccess) {
         this(name);
         this.roleToAccess = roleToAccess;
+    }
+
+    private static String base64encoder(String origin) {
+        byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes(StandardCharsets.UTF_8));
+        return new String(encodedBytes, StandardCharsets.UTF_8);
     }
 
     @JsonIgnore
@@ -97,12 +103,12 @@ public class Report {
 
     @JsonIgnore
     public int getLanguageCount() {
-        return this.labels.size();
+        return labels.size();
     }
 
     public void addLanguage(String lang) {
-        this.labels.add(new ReportLabels(lang));
-        this.helps.add(new ReportHelp(lang));
+        labels.add(new ReportLabels(lang));
+        helps.add(new ReportHelp(lang));
         for (Indicator indicator : indicators) {
             indicator.addLanguage(lang);
         }
@@ -112,8 +118,8 @@ public class Report {
     }
 
     public void removeLanguage(int index) {
-        this.labels.remove(index);
-        this.helps.remove(index);
+        labels.remove(index);
+        helps.remove(index);
         for (Indicator indicator : indicators) {
             indicator.removeLanguage(index);
         }
@@ -124,7 +130,7 @@ public class Report {
 
     @JsonIgnore
     public Dimension getDimensionByName(String name) {
-        for (Dimension dimension : this.dimensions) {
+        for (Dimension dimension : dimensions) {
             if (dimension.getName().equalsIgnoreCase(name)) {
                 return dimension;
             }
@@ -133,11 +139,11 @@ public class Report {
     }
 
     public void addVisualization(Visualization entity) {
-        this.visualizations.add(entity);
+        visualizations.add(entity);
     }
 
     public void addIndicator(Indicator entity) {
-        this.indicators.add(entity);
+        indicators.add(entity);
     }
 
     public AdditionalCalculation getAdditionalCalculation() {
@@ -182,11 +188,6 @@ public class Report {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static String base64encoder(final String origin) {
-        final byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes());
-        return new String(encodedBytes);
     }
 
 }

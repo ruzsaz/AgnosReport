@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import hu.agnos.report.entity.Report;
 import hu.agnos.report.repository.ReportRepository;
+import org.springframework.data.repository.CrudRepository;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -18,8 +20,8 @@ public class AgnosReport {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ReportRepository rr = new ReportRepository();
-        Optional<Report> optReport = rr.findById("NEW_REPORT_CRC_BNO_1.report.xml");
+        CrudRepository<Report, String> reportRepository = new ReportRepository();
+        Optional<Report> optReport = reportRepository.findById("NEW_REPORT_CRC_BNO_1.report.xml");
         if (optReport.isPresent()) {
 
             try {

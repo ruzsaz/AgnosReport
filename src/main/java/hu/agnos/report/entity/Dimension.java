@@ -2,13 +2,13 @@ package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+
 /**
- *
  * @author parisek
  */
 @Getter
@@ -31,13 +31,13 @@ public class Dimension {
 
     public Dimension() {
         this.name = "";
-        this.multilingualization = new ArrayList<>();
+        this.multilingualization = new ArrayList<>(2);
     }
 
     public Dimension(int languageNumber) {
         this();
         for (int i = 0; i < languageNumber; i++) {
-            this.multilingualization.add(new DimensionLabels());
+            multilingualization.add(new DimensionLabels());
         }
     }
 
@@ -49,11 +49,11 @@ public class Dimension {
     }
 
     public void addLanguage(String lang) {
-        this.multilingualization.add(new DimensionLabels(lang));
+        multilingualization.add(new DimensionLabels(lang));
     }
 
     public void removeLanguage(int index) {
-        this.multilingualization.remove(index);
+        multilingualization.remove(index);
     }
 
     public Dimension deepCopy() {
@@ -61,4 +61,5 @@ public class Dimension {
         result.setMultilingualization(new ArrayList<>(multilingualization));
         return result;
     }
+
 }

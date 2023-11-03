@@ -55,9 +55,9 @@ public class Indicator {
     private ArrayList<IndicatorLabels> multilingualization;
 
     public Indicator(int languageNumber) {
-        this.multilingualization = new ArrayList<>();
+        this.multilingualization = new ArrayList<>(2);
         for (int i = 0; i < languageNumber; i++) {
-            this.multilingualization.add(new IndicatorLabels());
+            multilingualization.add(new IndicatorLabels());
         }
         this.extraCalculation = new ExtraCalculation();
     }
@@ -80,19 +80,19 @@ public class Indicator {
     }
 
     public boolean hasExtraCalculation() {
-        return !(this.extraCalculation == null || "".equals(this.extraCalculation.getFunction()));
+        return !(extraCalculation == null || "".equals(extraCalculation.getFunction()));
     }
 
     public void addLanguage(String lang) {
-        this.multilingualization.add(new IndicatorLabels(lang));
+        multilingualization.add(new IndicatorLabels(lang));
     }
 
     public void removeLanguage(int index) {
-        this.multilingualization.remove(index);
+        multilingualization.remove(index);
     }
 
     public Indicator deepCopy() {
-        Indicator result = new Indicator(this.multilingualization.size(), denominatorName, denominatorCubeName, denominatorMultiplier, denominatorSign, denominatorIsHidden, valueName, valueCubeName, valueIsHidden, valueSign);
+        Indicator result = new Indicator(multilingualization.size(), denominatorName, denominatorCubeName, denominatorMultiplier, denominatorSign, denominatorIsHidden, valueName, valueCubeName, valueIsHidden, valueSign);
         result.setMultilingualization(new ArrayList<>(multilingualization));
         result.setExtraCalculation(extraCalculation);
         return result;
