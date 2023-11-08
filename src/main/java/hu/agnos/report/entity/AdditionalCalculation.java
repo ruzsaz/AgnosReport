@@ -1,5 +1,7 @@
 package hu.agnos.report.entity;
 
+// TODO: Ezt az osztályt törölni
+
 /**
  * @author parisek
  */
