@@ -146,40 +146,6 @@ public class Report {
         indicators.add(entity);
     }
 
-    // TODO: ezt a függvényt törölni
-    public AdditionalCalculation getAdditionalCalculation() {
-        for (Indicator ind : indicators) {
-            if (ind.hasExtraCalculation()) {
-                return new AdditionalCalculation(ind.getExtraCalculation().getFunction(), ind.getExtraCalculation().getArgs() + "," + ind.getValueName());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns the extraCalculations (only Kaplan-Meier exists to this date) if there is any.
-     *
-     * @return The list of extraCalculated indicators.
-     */
-    public List<Indicator> getExtraCalculatedIndicators() {
-        List<Indicator> result = new ArrayList<>(1);
-        for (Indicator indicator : indicators) {
-            if (indicator.hasExtraCalculation()) {
-                result.add(indicator);
-            }
-        }
-        return result;
-    }
-
-    public boolean isAdditionalCalculation() {
-        for (Indicator ind : indicators) {
-            if (ind.hasExtraCalculation()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Report deepCopy() {
         Report result = new Report(name);
         result.setRoleToAccess(roleToAccess);

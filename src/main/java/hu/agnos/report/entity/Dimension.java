@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * @author parisek
@@ -29,9 +30,14 @@ public class Dimension {
     @JacksonXmlElementWrapper(useWrapping = false)
     private ArrayList<DimensionLabels> multilingualization;
 
+    @JacksonXmlProperty(localName = "TransparentInCube")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private HashSet<String> transparentInCubes;
+
     public Dimension() {
         this.name = "";
         this.multilingualization = new ArrayList<>(2);
+        this.transparentInCubes = new HashSet<>(1);
     }
 
     public Dimension(int languageNumber) {
@@ -56,9 +62,18 @@ public class Dimension {
         multilingualization.remove(index);
     }
 
+    public void addTransparentCubeName(String cubeName) {
+        transparentInCubes.add(cubeName);
+    }
+
+    public void removeTransparentCubeName(String cubeName) {
+        transparentInCubes.remove(cubeName);
+    }
+
     public Dimension deepCopy() {
         Dimension result = new Dimension(multilingualization.size(), name, type, allowedDepth);
         result.setMultilingualization(new ArrayList<>(multilingualization));
+        result.setTransparentInCubes(new HashSet<>(transparentInCubes));
         return result;
     }
 

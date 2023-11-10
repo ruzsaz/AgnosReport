@@ -38,12 +38,6 @@
                      <xs:element name="Indicator" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:sequence>
-                              <xs:element name="ExtraCalculation" minOccurs="0" maxOccurs="1">
-                                 <xs:complexType>
-                                    <xs:attribute name="function" type="xs:string" use="required" />
-                                    <xs:attribute name="args" type="xs:string" use="required" />
-                                 </xs:complexType>
-                              </xs:element>
                               <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
                                  <xs:complexType>
                                     <xs:attribute name="lang" type="xs:string" use="required" />
@@ -95,6 +89,7 @@
                                     <xs:attribute name="topLevelString" type="xs:string" use="required" />
                                  </xs:complexType>
                               </xs:element>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="TransparentInCube" type="xs:string" />
                            </xs:sequence>
                            <xs:attribute name="name" type="xs:string" use="required" />
                            <xs:attribute name="type" type="xs:string" use="optional" />

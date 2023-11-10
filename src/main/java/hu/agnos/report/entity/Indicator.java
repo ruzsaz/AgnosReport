@@ -47,9 +47,6 @@ public class Indicator {
     @JacksonXmlProperty(isAttribute = true)
     private String valueSign;
 
-    @JacksonXmlProperty(localName = "ExtraCalculation")
-    private ExtraCalculation extraCalculation;
-
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
     private ArrayList<IndicatorLabels> multilingualization;
@@ -59,7 +56,6 @@ public class Indicator {
         for (int i = 0; i < languageNumber; i++) {
             multilingualization.add(new IndicatorLabels());
         }
-        this.extraCalculation = new ExtraCalculation();
     }
 
     public Indicator(int languageNumber, Double multiplier) {
@@ -79,10 +75,6 @@ public class Indicator {
         this.valueSign = valueSign;
     }
 
-    public boolean hasExtraCalculation() {
-        return !(extraCalculation == null || "".equals(extraCalculation.getFunction()));
-    }
-
     public void addLanguage(String lang) {
         multilingualization.add(new IndicatorLabels(lang));
     }
@@ -94,10 +86,7 @@ public class Indicator {
     public Indicator deepCopy() {
         Indicator result = new Indicator(multilingualization.size(), denominatorName, denominatorCubeName, denominatorMultiplier, denominatorSign, denominatorIsHidden, valueName, valueCubeName, valueIsHidden, valueSign);
         result.setMultilingualization(new ArrayList<>(multilingualization));
-        result.setExtraCalculation(extraCalculation);
         return result;
     }
-
-    
     
 }
