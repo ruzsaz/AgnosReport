@@ -3,11 +3,14 @@ package hu.agnos.report.entity;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author parisek
@@ -15,6 +18,7 @@ import java.util.HashSet;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Dimension {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -28,30 +32,20 @@ public class Dimension {
 
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private ArrayList<DimensionLabels> multilingualization;
+    private List<DimensionLabels> multilingualization;
 
     @JacksonXmlProperty(localName = "TransparentInCube")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private HashSet<String> transparentInCubes;
+    private Set<String> transparentInCubes;
 
-    public Dimension() {
+    public Dimension(List<ReportLabels> reportLabels) {
         this.name = "";
-        this.multilingualization = new ArrayList<>(2);
+        this.type = "";
         this.transparentInCubes = new HashSet<>(1);
-    }
-
-    public Dimension(int languageNumber) {
-        this();
-        for (int i = 0; i < languageNumber; i++) {
-            multilingualization.add(new DimensionLabels());
+        this.multilingualization = new ArrayList<>(reportLabels.size());
+        for (ReportLabels reportLabel : reportLabels) {
+            multilingualization.add(new DimensionLabels(reportLabel.getLang()));
         }
-    }
-
-    public Dimension(int languageNumber, String hierarchyUniqueName, String type, int allowedDepth) {
-        this(languageNumber);
-        this.name = hierarchyUniqueName;
-        this.type = type;
-        this.allowedDepth = allowedDepth;
     }
 
     public void addLanguage(String lang) {
@@ -70,11 +64,11 @@ public class Dimension {
         transparentInCubes.remove(cubeName);
     }
 
-    public Dimension deepCopy() {
-        Dimension result = new Dimension(multilingualization.size(), name, type, allowedDepth);
-        result.setMultilingualization(new ArrayList<>(multilingualization));
-        result.setTransparentInCubes(new HashSet<>(transparentInCubes));
-        return result;
-    }
+//    public Dimension deepCopy() {
+//        Dimension result = new Dimension(multilingualization.size(), name, type, allowedDepth);
+//        result.setMultilingualization(new ArrayList<>(multilingualization));
+//        result.setTransparentInCubes(new HashSet<>(transparentInCubes));
+//        return result;
+//    }
 
 }

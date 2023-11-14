@@ -1,11 +1,12 @@
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- * @author parisek
- */
 @Getter
 @Setter
 @ToString
@@ -27,6 +28,9 @@ public class DimensionLabels {
 
     public DimensionLabels(String lang) {
         this.lang = lang;
+        this.caption = "";
+        this.description = "";
+        this.topLevelString = "";
     }
 
 }

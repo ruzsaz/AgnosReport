@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-/**
- * @author parisek
- */
 @Getter
 @Setter
 @ToString
@@ -49,18 +46,19 @@ public class Report {
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<ReportHelp> helps;
 
-    @JacksonXmlElementWrapper(localName = "Indicators")
-    @JacksonXmlProperty(localName = "Indicator")
-    private List<Indicator> indicators;
-
     @JacksonXmlElementWrapper(localName = "Dimensions")
     @JacksonXmlProperty(localName = "Dimension")
     private List<Dimension> dimensions;
+
+    @JacksonXmlElementWrapper(localName = "Indicators")
+    @JacksonXmlProperty(localName = "Indicator")
+    private List<Indicator> indicators;
 
     @JacksonXmlElementWrapper(localName = "Visualizations")
     @JacksonXmlProperty(localName = "Visualization")
     private List<Visualization> visualizations;
 
+    @JsonIgnore
     private boolean broken;
 
     public Report() {
@@ -68,8 +66,8 @@ public class Report {
         this.cubes = new ArrayList<>(3);
         this.labels = new ArrayList<>(2);
         this.helps = new ArrayList<>(2);
-        this.indicators = new ArrayList<>(6);
         this.dimensions = new ArrayList<>(6);
+        this.indicators = new ArrayList<>(6);
         this.visualizations = new ArrayList<>(4);
         this.broken = false;
     }
@@ -102,6 +100,11 @@ public class Report {
     }
 
     @JsonIgnore
+    public List<String> getCubeNames() {
+        return cubes.stream().map(Cube::getName).toList();
+    }
+
+    @JsonIgnore
     public int getLanguageCount() {
         return labels.size();
     }
@@ -129,9 +132,9 @@ public class Report {
     }
 
     @JsonIgnore
-    public Dimension getDimensionByName(String name) {
+    public Dimension getDimensionByName(String nameToFind) {
         for (Dimension dimension : dimensions) {
-            if (dimension.getName().equalsIgnoreCase(name)) {
+            if (dimension.getName().equalsIgnoreCase(nameToFind)) {
                 return dimension;
             }
         }
@@ -146,23 +149,23 @@ public class Report {
         indicators.add(entity);
     }
 
-    public Report deepCopy() {
-        Report result = new Report(name);
-        result.setRoleToAccess(roleToAccess);
-
-        result.setLabels(new ArrayList<>(labels));
-        result.setHelps(new ArrayList<>(helps));
-        for (Indicator indicator : indicators) {
-            result.indicators.add(indicator.deepCopy());
-        }
-        for (Dimension dimension : dimensions) {
-            result.dimensions.add(dimension.deepCopy());
-        }
-        for (Visualization visualization : visualizations) {
-            result.visualizations.add(visualization.deepCopy());
-        }
-        return result;
-    }
+//    public Report deepCopy() {
+//        Report result = new Report(name);
+//        result.setRoleToAccess(roleToAccess);
+//
+//        result.setLabels(new ArrayList<>(labels));
+//        result.setHelps(new ArrayList<>(helps));
+//        for (Indicator indicator : indicators) {
+//            result.indicators.add(indicator.deepCopy());
+//        }
+//        for (Dimension dimension : dimensions) {
+//            result.dimensions.add(dimension.deepCopy());
+//        }
+//        for (Visualization visualization : visualizations) {
+//            result.visualizations.add(visualization.deepCopy());
+//        }
+//        return result;
+//    }
 
     public String asJson() {
         try {

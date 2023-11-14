@@ -1,11 +1,12 @@
 package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- * @author parisek
- */
 @Getter
 @Setter
 @ToString
@@ -35,7 +36,13 @@ public class IndicatorLabels {
     private String denominatorUnitPlural;
 
     public IndicatorLabels(String lang) {
+        this.caption = "";
+        this.description = "";
         this.lang = lang;
+        this.valueUnit = "";
+        this.valueUnitPlural = "";
+        this.denominatorUnit = "";
+        this.denominatorUnitPlural = "";
     }
 
 }

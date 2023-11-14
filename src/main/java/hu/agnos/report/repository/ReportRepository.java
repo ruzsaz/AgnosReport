@@ -18,7 +18,13 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author parisek
@@ -34,13 +40,13 @@ public class ReportRepository implements CrudRepository<Report, String> {
     }
 
     public Optional<Report> findByName(String reportName) {
-        Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportName, ReportRepository.ID_MUST_NOT_BE_NULL);
         return findById(reportName + ".report.xml");
     }
 
     @Override
     public Optional<Report> findById(String reportFileName) {
-        Assert.notNull(reportFileName, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportFileName, ReportRepository.ID_MUST_NOT_BE_NULL);
         Report result = null;
         if (reportFileName.toLowerCase(Locale.ROOT).endsWith(".report.xml")) {
             if (validateXML(reportFileName)) {
@@ -48,7 +54,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                     XmlMapper xmlMapper = new XmlMapper();
                     result = xmlMapper.readValue(new File(reportDirectoryURI, reportFileName), Report.class);
                 } catch (IOException ex) {
-                    logger.error(ex.getMessage());
+                    ReportRepository.logger.error(ex.getMessage());
                     return Optional.empty();
                 }
             }
@@ -58,7 +64,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     @Override
     public List<Report> findAllById(Iterable<String> reportFileNames) {
-        Assert.notNull(reportFileNames, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportFileNames, ReportRepository.ID_MUST_NOT_BE_NULL);
         List<Report> result = new ArrayList<>(10);
         for (String reportFileName : reportFileNames) {
             Optional<Report> optReport = findById(reportFileName);
@@ -75,7 +81,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             String fileName = fileEntry.getName();
             if (fileName.toLowerCase(Locale.ROOT).endsWith(".report.xml")) {
                 Optional<Report> optReport = findById(fileName);
-                optReport.ifPresent(report -> storeCubeReports(tempReportStore, report));
+                optReport.ifPresent(report -> ReportRepository.storeCubeReports(tempReportStore, report));
             }
         }
         return new ArrayList<>(tempReportStore.values());
@@ -89,7 +95,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     @Override
     public boolean existsById(String reportFileName) {
-        Assert.notNull(reportFileName, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportFileName, ReportRepository.ID_MUST_NOT_BE_NULL);
         Optional<Report> optReport = findById(reportFileName);
         return optReport.isPresent();
     }
@@ -97,12 +103,12 @@ public class ReportRepository implements CrudRepository<Report, String> {
     @Override
     public long count() {
         List<Report> reports = findAll();
-        return reports == null ? 0 : reports.size();
+        return (reports == null ? 0 : reports.size());
     }
 
     @Override
     public void delete(Report report) {
-        Assert.notNull(report, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(report, ReportRepository.ID_MUST_NOT_BE_NULL);
         String reportFullName = report.getName() + ".report.xml";
         File file = new File(reportDirectoryURI, reportFullName);
         if (file.exists()) {
@@ -111,7 +117,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
     }
 
     public void deleteById(String reportName) {
-        Assert.notNull(reportName, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(reportName, ReportRepository.ID_MUST_NOT_BE_NULL);
         String reportFullName = reportName + ".report.xml";
         File file = new File(reportDirectoryURI, reportFullName);
         if (file.exists()) {
@@ -122,7 +128,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     @Override
     public void deleteAllById(Iterable<? extends String> ids) {
-        logger.error("Not implemented");
+        ReportRepository.logger.error("Not implemented");
     }
 
     @Override
@@ -147,7 +153,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
             xmlMapper.writeValue(new File(reportDirectoryURI, reportFullName), entity);
         } catch (IOException ex) {
-            logger.error(ex.getMessage());
+            ReportRepository.logger.error(ex.getMessage());
             return null;
         }
         return entity;
@@ -155,7 +161,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     @Override
     public <S extends Report> List<S> saveAll(Iterable<S> reports) {
-        List<S> result = new ArrayList<>();
+        List<S> result = new ArrayList<>(10);
         for (S report : reports) {
             S tempReport = save(report);
             if (tempReport != null) {
@@ -176,7 +182,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             validator.validate(xmlFile);
             return true;
         } catch (SAXException | IOException e) {
-            logger.error(e.getMessage());
+            ReportRepository.logger.error(e.getMessage());
             return false;
         }
     }

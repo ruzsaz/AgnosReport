@@ -14,7 +14,10 @@ import java.util.Optional;
  *
  * @author parisek
  */
-public class AgnosReport {
+public final class AgnosReport {
+
+    private AgnosReport() {
+    }
 
     /**
      * @param args the command line arguments

@@ -32,6 +32,30 @@
                   </xs:simpleContent>
                </xs:complexType>
             </xs:element>
+            <xs:element name="Dimensions">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Dimension" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                    <xs:attribute name="lang" type="xs:string" use="required" />
+                                    <xs:attribute name="caption" type="xs:string" use="required" />
+                                    <xs:attribute name="description" type="xs:string" use="required" />
+                                    <xs:attribute name="topLevelString" type="xs:string" use="required" />
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="TransparentInCube" type="xs:string" />
+                           </xs:sequence>
+                           <xs:attribute name="name" type="xs:string" use="required" />
+                           <xs:attribute name="type" type="xs:string" use="optional" />
+                           <xs:attribute name="allowedDepth" type="xs:nonNegativeInteger" use="required" />
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
             <xs:element name="Indicators">
                <xs:complexType>
                   <xs:sequence>
@@ -70,30 +94,6 @@
                      <xs:element name="Visualization" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:attribute name="initString" type="xs:string" use="required" />
-                        </xs:complexType>
-                     </xs:element>
-                  </xs:sequence>
-               </xs:complexType>
-            </xs:element>
-            <xs:element name="Dimensions">
-               <xs:complexType>
-                  <xs:sequence>
-                     <xs:element name="Dimension" minOccurs="0" maxOccurs="unbounded">
-                        <xs:complexType>
-                           <xs:sequence>
-                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
-                                 <xs:complexType>
-                                    <xs:attribute name="lang" type="xs:string" use="required" />
-                                    <xs:attribute name="caption" type="xs:string" use="required" />
-                                    <xs:attribute name="description" type="xs:string" use="required" />
-                                    <xs:attribute name="topLevelString" type="xs:string" use="required" />
-                                 </xs:complexType>
-                              </xs:element>
-                              <xs:element minOccurs="0" maxOccurs="unbounded" name="TransparentInCube" type="xs:string" />
-                           </xs:sequence>
-                           <xs:attribute name="name" type="xs:string" use="required" />
-                           <xs:attribute name="type" type="xs:string" use="optional" />
-                           <xs:attribute name="allowedDepth" type="xs:positiveInteger" use="required" />
                         </xs:complexType>
                      </xs:element>
                   </xs:sequence>
