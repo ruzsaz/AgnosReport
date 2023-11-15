@@ -36,7 +36,7 @@ public class Dimension {
 
     @JacksonXmlProperty(localName = "TransparentInCube")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private Set<String> transparentInCubes;
+    private Set<String> transparentInCubes = new HashSet<>(1);
 
     public Dimension(List<ReportLabels> reportLabels) {
         this.name = "";
