@@ -29,9 +29,6 @@ public class Report {
     private String name;
 
     @JacksonXmlProperty(isAttribute = true)
-    private String databaseType;
-
-    @JacksonXmlProperty(isAttribute = true)
     private String roleToAccess;
 
     @JacksonXmlElementWrapper(localName = "Cubes")
@@ -148,24 +145,6 @@ public class Report {
     public void addIndicator(Indicator entity) {
         indicators.add(entity);
     }
-
-//    public Report deepCopy() {
-//        Report result = new Report(name);
-//        result.setRoleToAccess(roleToAccess);
-//
-//        result.setLabels(new ArrayList<>(labels));
-//        result.setHelps(new ArrayList<>(helps));
-//        for (Indicator indicator : indicators) {
-//            result.indicators.add(indicator.deepCopy());
-//        }
-//        for (Dimension dimension : dimensions) {
-//            result.dimensions.add(dimension.deepCopy());
-//        }
-//        for (Visualization visualization : visualizations) {
-//            result.visualizations.add(visualization.deepCopy());
-//        }
-//        return result;
-//    }
 
     public String asJson() {
         try {
