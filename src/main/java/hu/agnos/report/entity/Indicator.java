@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -92,7 +93,7 @@ public class Indicator {
 
     @JsonIgnore
     public String getCombinedValueName() {
-        return valueCubeName + "." + valueName;
+        return (valueCubeName == null || valueCubeName.isEmpty()) ? valueName : valueCubeName + "." + valueName;
     }
 
     public void setCombinedValueName(String cubeAndValueName) {
@@ -100,6 +101,9 @@ public class Indicator {
             String[] cubeAndValue = cubeAndValueName.split("\\.");
             this.valueCubeName = cubeAndValue[0];
             this.valueName = cubeAndValue[1];
+        } else if (Objects.equals(cubeAndValueName, "1")) {
+            this.valueCubeName = "";
+            this.valueName = "1";
         }
     }
 
