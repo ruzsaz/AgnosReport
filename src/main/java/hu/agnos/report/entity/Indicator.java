@@ -65,18 +65,6 @@ public class Indicator {
         this.denominatorMultiplier = 1.0;
     }
 
-//    public Indicator(int languageNumber, String denominatorName, String denominatorCubeName, double multiplier, String denominatorSign, boolean denominatorIsHidden, String valueName, String valueCubeName, boolean valueIsHidden, String valueSign) {
-//        this(languageNumber, multiplier);
-//        this.denominatorName = denominatorName;
-//        this.denominatorCubeName = denominatorCubeName;
-//        this.denominatorSign = denominatorSign;
-//        this.denominatorIsHidden = denominatorIsHidden;
-//        this.valueName = valueName;
-//        this.valueCubeName = valueCubeName;
-//        this.valueIsHidden = valueIsHidden;
-//        this.valueSign = valueSign;
-//    }
-
     public void addLanguage(String lang) {
         multilingualization.add(new IndicatorLabels(lang));
     }
@@ -84,12 +72,6 @@ public class Indicator {
     public void removeLanguage(int index) {
         multilingualization.remove(index);
     }
-
-//    public Indicator deepCopy() {
-//        Indicator result = new Indicator(multilingualization.size(), denominatorName, denominatorCubeName, denominatorMultiplier, denominatorSign, denominatorIsHidden, valueName, valueCubeName, valueIsHidden, valueSign);
-//        result.setMultilingualization(new ArrayList<>(multilingualization));
-//        return result;
-//    }
 
     @JsonIgnore
     public String getCombinedValueName() {
@@ -109,7 +91,7 @@ public class Indicator {
 
     @JsonIgnore
     public String getCombinedDenominatorName() {
-        return denominatorCubeName + "." + denominatorName;
+        return (denominatorCubeName == null || denominatorCubeName.isEmpty()) ? denominatorName : denominatorCubeName + "." + denominatorName;
     }
 
     public void setCombinedDenominatorName(String cubeAndValueName) {
@@ -117,6 +99,9 @@ public class Indicator {
             String[] cubeAndValue = cubeAndValueName.split("\\.");
             this.denominatorCubeName = cubeAndValue[0];
             this.denominatorName = cubeAndValue[1];
+        } else if (Objects.equals(cubeAndValueName, "1")) {
+            this.denominatorCubeName = "";
+            this.denominatorName = "1";
         }
     }
 
