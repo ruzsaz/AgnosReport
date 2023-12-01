@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * @author parisek
- */
 @Getter
 @Setter
 @ToString
@@ -19,9 +16,5 @@ public class Visualization {
 
     @JacksonXmlProperty(isAttribute = true)
     private String initString;
-
-    public Visualization deepCopy() {
-        return new Visualization(initString);
-    }
 
 }

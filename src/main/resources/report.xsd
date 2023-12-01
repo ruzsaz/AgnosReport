@@ -6,7 +6,7 @@
             <xs:element name="Cubes">
                <xs:complexType>
                   <xs:sequence>
-                     <xs:element name="Cube" minOccurs="1" maxOccurs="unbounded">
+                     <xs:element name="Cube" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:attribute name="name" type="xs:string" use="required" />
                            <xs:attribute name="databaseType" type="xs:string" use="required" />
@@ -15,7 +15,7 @@
                   </xs:sequence>
                </xs:complexType>
             </xs:element>
-            <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Labels" maxOccurs="unbounded">
                <xs:complexType>
                   <xs:attribute name="lang" type="xs:string" use="required" />
                   <xs:attribute name="caption" type="xs:string" use="required" />
@@ -23,7 +23,7 @@
                   <xs:attribute name="datasource" type="xs:string" use="required"  />
                </xs:complexType>
             </xs:element>
-            <xs:element name="Help" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Help" maxOccurs="unbounded">
                <xs:complexType>
                   <xs:simpleContent>
                      <xs:extension base="xs:string">
@@ -38,7 +38,7 @@
                      <xs:element name="Dimension" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:sequence>
-                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
+                              <xs:element name="Labels" maxOccurs="unbounded">
                                  <xs:complexType>
                                     <xs:attribute name="lang" type="xs:string" use="required" />
                                     <xs:attribute name="caption" type="xs:string" use="required" />
@@ -49,7 +49,7 @@
                               <xs:element minOccurs="0" maxOccurs="unbounded" name="TransparentInCube" type="xs:string" />
                            </xs:sequence>
                            <xs:attribute name="name" type="xs:string" use="required" />
-                           <xs:attribute name="type" type="xs:string" use="optional" />
+                           <xs:attribute name="type" type="xs:string"/>
                            <xs:attribute name="allowedDepth" type="xs:nonNegativeInteger" use="required" />
                         </xs:complexType>
                      </xs:element>
@@ -62,15 +62,15 @@
                      <xs:element name="Indicator" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:sequence>
-                              <xs:element name="Labels" minOccurs="1" maxOccurs="unbounded">
+                              <xs:element name="Labels" maxOccurs="unbounded">
                                  <xs:complexType>
                                     <xs:attribute name="lang" type="xs:string" use="required" />
                                     <xs:attribute name="caption" type="xs:string" use="required" />
                                     <xs:attribute name="description" type="xs:string" use="required" />
                                     <xs:attribute name="valueUnit" type="xs:string" use="required" />
-                                    <xs:attribute name="valueUnitPlural" type="xs:string" use="optional" />
+                                    <xs:attribute name="valueUnitPlural" type="xs:string"/>
                                     <xs:attribute name="denominatorUnit" type="xs:string" use="required" />
-                                    <xs:attribute name="denominatorUnitPlural" type="xs:string" use="optional" />
+                                    <xs:attribute name="denominatorUnitPlural" type="xs:string"/>
                                  </xs:complexType>
                               </xs:element>
                            </xs:sequence>
@@ -78,6 +78,7 @@
                            <xs:attribute name="valueCubeName" type="xs:string" use="required" />
                            <xs:attribute name="valueIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="valueSign" type="xs:decimal" use="required" />
+                           <xs:attribute name="valueMultiplier" type="xs:decimal" use="required" />
                            <xs:attribute name="denominatorName" type="xs:string" use="required" />
                            <xs:attribute name="denominatorCubeName" type="xs:string" use="required" />
                            <xs:attribute name="denominatorIsHidden" type="xs:boolean" use="required" />

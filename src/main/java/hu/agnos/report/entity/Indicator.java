@@ -13,10 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author parisek
- */
 @Getter
 @Setter
 @ToString
@@ -49,6 +45,9 @@ public class Indicator {
     private boolean valueIsHidden;
 
     @JacksonXmlProperty(isAttribute = true)
+    private double valueMultiplier;
+
+    @JacksonXmlProperty(isAttribute = true)
     private String valueSign;
 
     @JacksonXmlProperty(localName = "Labels")
@@ -61,6 +60,7 @@ public class Indicator {
             multilingualization.add(new IndicatorLabels(reportLabel.getLang()));
         }
         this.valueSign = "0";
+        this.valueMultiplier = 1.0;
         this.denominatorSign = "0";
         this.denominatorMultiplier = 1.0;
     }

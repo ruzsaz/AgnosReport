@@ -10,10 +10,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.io.IOException;
 import java.util.Optional;
 
-/**
- *
- * @author parisek
- */
 public final class AgnosReport {
 
     private AgnosReport() {
