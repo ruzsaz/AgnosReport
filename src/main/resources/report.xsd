@@ -103,6 +103,7 @@
          </xs:sequence>
          <xs:attribute name="name" type="xs:string" use="required" />
          <xs:attribute name="roleToAccess" type="xs:string" use="required" />
+         <xs:attribute name="saveAllowed" type="xs:boolean" default="true" />
       </xs:complexType>
    </xs:element>
 </xs:schema>

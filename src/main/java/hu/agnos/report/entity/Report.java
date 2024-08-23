@@ -31,6 +31,9 @@ public class Report {
     @JacksonXmlProperty(isAttribute = true)
     private String roleToAccess;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private Boolean saveAllowed;
+
     @JacksonXmlElementWrapper(localName = "Cubes")
     @JacksonXmlProperty(localName = "Cube")
     private List<Cube> cubes;
@@ -60,6 +63,7 @@ public class Report {
 
     public Report() {
         this.roleToAccess = "";
+        this.saveAllowed = true;
         this.cubes = new ArrayList<>(3);
         this.labels = new ArrayList<>(2);
         this.helps = new ArrayList<>(2);
