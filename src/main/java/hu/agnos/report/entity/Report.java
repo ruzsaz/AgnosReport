@@ -2,6 +2,7 @@ package hu.agnos.report.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -16,6 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
+import hu.agnos.report.jacksonIgnoreUtils.JsonIgnoreWhenPersist;
+import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenPersistInspector;
+import hu.agnos.report.jacksonIgnoreUtils.JsonIgnoreWhenSend;
+import hu.agnos.report.repository.KeywordsRepository;
 
 @Getter
 @Setter
@@ -58,6 +64,21 @@ public class Report {
     @JacksonXmlProperty(localName = "Visualization")
     private List<Visualization> visualizations;
 
+    @JsonIgnoreWhenPersist
+    private List<Keyword> keywords;
+
+    @JacksonXmlElementWrapper(localName = "Keywords")
+    @JacksonXmlProperty(localName = "Keyword")
+    @JsonIgnoreWhenSend
+    private List<String> keywordStrings;
+
+    @JacksonXmlProperty(localName = "Kpi")
+    private Kpi kpi;
+
+    @JsonIgnoreWhenPersist
+    @JsonRawValue
+    private String topLevelValues;
+
     @JsonIgnore
     private boolean broken;
 
@@ -70,7 +91,11 @@ public class Report {
         this.dimensions = new ArrayList<>(6);
         this.indicators = new ArrayList<>(6);
         this.visualizations = new ArrayList<>(4);
+        this.keywords = new ArrayList<>(5);
+        this.keywordStrings = new ArrayList<>(5);
         this.broken = false;
+        this.kpi = new Kpi();
+        this.topLevelValues = "";
     }
 
     public Report(String name) {
@@ -119,6 +144,7 @@ public class Report {
         for (Dimension dimension : dimensions) {
             dimension.addLanguage(lang);
         }
+        kpi.addLanguage(lang);
     }
 
     public void removeLanguage(int index) {
@@ -130,6 +156,7 @@ public class Report {
         for (Dimension dimension : dimensions) {
             dimension.removeLanguage(index);
         }
+        kpi.removeLanguage(index);
     }
 
     @JsonIgnore
@@ -152,10 +179,27 @@ public class Report {
 
     public String asJson() {
         try {
-            return (new ObjectMapper()).writeValueAsString(this);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setAnnotationIntrospector(new DisableIgnoreWhenPersistInspector());
+            return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void fillKeywordsFromKeywordStrings() {
+        List<Keyword> allKeywords = new KeywordsRepository().findAll();
+        this.keywords = new ArrayList<>(keywordStrings.size());
+        for (String kString : keywordStrings) {
+            Keyword keyword = fromKeywordString(allKeywords, kString);
+            if (keyword != null) {
+                keywords.add(keyword);
+            }
+        }
+    }
+
+    private Keyword fromKeywordString(List<Keyword> all, String kString) {
+        return all.stream().filter(k -> k.getName().equals(kString)).findFirst().orElse(null);
     }
 
 }

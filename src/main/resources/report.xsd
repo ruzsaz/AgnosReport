@@ -100,6 +100,32 @@
                   </xs:sequence>
                </xs:complexType>
             </xs:element>
+
+            <xs:element name="Keywords" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Keyword" minOccurs="0" maxOccurs="unbounded">
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Kpi" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Labels" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:attribute name="lang" type="xs:string" use="required" />
+                           <xs:attribute name="caption" type="xs:string" use="required" />
+                           <xs:attribute name="description" type="xs:string" use="required" />
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="indicatorIndex" type="xs:string" use="required" />
+                  <xs:attribute name="isRatio" type="xs:boolean" use="required" />
+               </xs:complexType>
+            </xs:element>
+
          </xs:sequence>
          <xs:attribute name="name" type="xs:string" use="required" />
          <xs:attribute name="roleToAccess" type="xs:string" use="required" />

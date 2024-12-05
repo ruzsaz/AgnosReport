@@ -62,8 +62,8 @@ public class Dimension {
     }
 
 //    public Dimension deepCopy() {
-//        Dimension result = new Dimension(multilingualization.size(), name, type, allowedDepth);
-//        result.setMultilingualization(new ArrayList<>(multilingualization));
+//        Dimension result = new Dimension(labels.size(), name, type, allowedDepth);
+//        result.setLabels(new ArrayList<>(labels));
 //        result.setTransparentInCubes(new HashSet<>(transparentInCubes));
 //        return result;
 //    }

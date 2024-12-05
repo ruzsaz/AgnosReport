@@ -1,9 +1,13 @@
 package hu.agnos.report.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import hu.agnos.report.entity.Report;
+import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenPersistInspector;
+import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenSendInspector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.CrudRepository;
@@ -52,7 +56,9 @@ public class ReportRepository implements CrudRepository<Report, String> {
             if (validateXML(reportFileName)) {
                 try {
                     XmlMapper xmlMapper = new XmlMapper();
+                    xmlMapper.setAnnotationIntrospector(new DisableIgnoreWhenSendInspector());
                     result = xmlMapper.readValue(new File(reportDirectoryURI, reportFileName), Report.class);
+                    result.fillKeywordsFromKeywordStrings();
                 } catch (IOException ex) {
                     ReportRepository.logger.error(ex.getMessage());
                     return Optional.empty();
@@ -149,6 +155,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
         String reportFullName = entity.getName() + ".report.xml";
         try {
             XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.setAnnotationIntrospector(new DisableIgnoreWhenSendInspector());
             xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
             xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
             xmlMapper.writeValue(new File(reportDirectoryURI, reportFullName), entity);
