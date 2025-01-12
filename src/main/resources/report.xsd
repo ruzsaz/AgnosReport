@@ -6,7 +6,7 @@
             <xs:element name="Cubes">
                <xs:complexType>
                   <xs:sequence>
-                     <xs:element name="Cube" maxOccurs="unbounded">
+                     <xs:element name="Cube" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                            <xs:attribute name="name" type="xs:string" use="required" />
                            <xs:attribute name="databaseType" type="xs:string" use="required" />
@@ -84,6 +84,8 @@
                            <xs:attribute name="denominatorIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="denominatorSign" type="xs:decimal" use="required" />
                            <xs:attribute name="denominatorMultiplier" type="xs:decimal" use="required" />
+                           <xs:attribute name="preferredColor" type="xs:string" />
+                           <xs:attribute name="isColorExact" type="xs:boolean" />
                         </xs:complexType>
                      </xs:element>
                   </xs:sequence>
@@ -121,6 +123,7 @@
                         </xs:complexType>
                      </xs:element>
                   </xs:sequence>
+                  <xs:attribute name="baseLevel" type="xs:string" />
                   <xs:attribute name="indicatorIndex" type="xs:string" use="required" />
                   <xs:attribute name="isRatio" type="xs:boolean" use="required" />
                </xs:complexType>
@@ -128,7 +131,7 @@
 
          </xs:sequence>
          <xs:attribute name="name" type="xs:string" use="required" />
-         <xs:attribute name="roleToAccess" type="xs:string" use="required" />
+         <xs:attribute name="roleToAccess" type="xs:string" />
          <xs:attribute name="saveAllowed" type="xs:boolean" default="true" />
       </xs:complexType>
    </xs:element>

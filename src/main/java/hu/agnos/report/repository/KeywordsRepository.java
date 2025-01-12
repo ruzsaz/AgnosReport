@@ -4,17 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -29,7 +23,6 @@ import org.xml.sax.SAXException;
 
 import hu.agnos.report.entity.Keyword;
 import hu.agnos.report.entity.Keywords;
-import hu.agnos.report.entity.Report;
 
 /**
  * @author parisek
@@ -38,7 +31,7 @@ public class KeywordsRepository implements CrudRepository<Keyword, String> {
 
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private static final String KEYWORDSFILENAME = "keywords.xml";
-    private static final Logger logger = LoggerFactory.getLogger(KeywordsRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(KeywordsRepository.class);
     private final String keywordsDirectoryURI;
 
     public KeywordsRepository() {
@@ -46,20 +39,20 @@ public class KeywordsRepository implements CrudRepository<Keyword, String> {
     }
 
     public Optional<Keyword> findByName(String keywordName) {
-        Assert.notNull(keywordName, KeywordsRepository.ID_MUST_NOT_BE_NULL);
+        Assert.notNull(keywordName, ID_MUST_NOT_BE_NULL);
         return findById(keywordName);
     }
 
     @Override
     public Optional<Keyword> findById(String keywordName) {
-        Assert.notNull(keywordName, KeywordsRepository.ID_MUST_NOT_BE_NULL);
+        Assert.notNull(keywordName, ID_MUST_NOT_BE_NULL);
         List<Keyword> all = findAll();
         return all.stream().filter(k -> k.getName().equals(keywordName)).findFirst();
     }
 
     @Override
     public List<Keyword> findAllById(Iterable<String> keywordNames) {
-        Assert.notNull(keywordNames, KeywordsRepository.ID_MUST_NOT_BE_NULL);
+        Assert.notNull(keywordNames, ID_MUST_NOT_BE_NULL);
         List<Keyword> all = findAll();
         return all.stream().filter(k -> StreamSupport.stream(keywordNames.spliterator(), false).anyMatch(k.getName()::equals)).toList();
     }
@@ -73,24 +66,16 @@ public class KeywordsRepository implements CrudRepository<Keyword, String> {
                 Keywords result = xmlMapper.readValue(file.toFile(), Keywords.class);
                 return result.getKeywords();
             } catch (IOException ex) {
-                KeywordsRepository.logger.error(ex.getMessage());
+                log.error(ex.getMessage());
                 return new ArrayList<>(10);
             }
         }
         return new ArrayList<>(10);
     }
 
-    /*
-    private static void storeCubeReports(Map<String, Report> storage, Report report) {
-        String reportKey = report.getName().toUpperCase(Locale.ROOT);
-        storage.remove(reportKey);
-        storage.put(reportKey, report);
-    }
-     */
-
     @Override
     public boolean existsById(String keywordName) {
-        Assert.notNull(keywordName, KeywordsRepository.ID_MUST_NOT_BE_NULL);
+        Assert.notNull(keywordName, ID_MUST_NOT_BE_NULL);
         Optional<Keyword> optKeyword = findById(keywordName);
         return optKeyword.isPresent();
     }
@@ -103,49 +88,37 @@ public class KeywordsRepository implements CrudRepository<Keyword, String> {
 
     @Override
     public void deleteById(String s) {
-        Assert.notNull(s, KeywordsRepository.ID_MUST_NOT_BE_NULL);
-        KeywordsRepository.logger.error("Not implemented");
+        Assert.notNull(s, ID_MUST_NOT_BE_NULL);
+        log.error("Delete by id not implemented");
         // TODO: finish
     }
 
     @Override
     public void delete(Keyword keyword) {
-        Assert.notNull(keyword, KeywordsRepository.ID_MUST_NOT_BE_NULL);
-        KeywordsRepository.logger.error("Not implemented");
+        Assert.notNull(keyword, ID_MUST_NOT_BE_NULL);
+        log.error("Delete not implemented");
         // TODO: finish
     }
 
     @Override
     public void deleteAllById(Iterable<? extends String> ids) {
-        KeywordsRepository.logger.error("Not implemented");
+        log.error("Delete all by ids not implemented");
     }
 
     @Override
     public void deleteAll(Iterable<? extends Keyword> keywords) {
-        KeywordsRepository.logger.error("Not implemented");
+        log.error("Delete all keywords not implemented");
     }
 
     @Override
     public void deleteAll() {
-        KeywordsRepository.logger.error("Not implemented");
+        log.error("Delete all not implemented");
     }
 
     @Override
     public <S extends Keyword> S save(S entity) {
         Assert.notNull(entity, "Entity must not be null.");
-        KeywordsRepository.logger.error("Not implemented");
-        /*
-        String reportFullName = entity.getName() + ".report.xml";
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
-            xmlMapper.writeValue(new File(keywordsDirectoryURI, reportFullName), entity);
-        } catch (IOException ex) {
-            KeywordsRepository.logger.error(ex.getMessage());
-            return null;
-        }
-        */
+        log.error("Saving not implemented");
         return entity;
     }
 
@@ -172,7 +145,7 @@ public class KeywordsRepository implements CrudRepository<Keyword, String> {
             validator.validate(xmlFile);
             return true;
         } catch (SAXException | IOException e) {
-            KeywordsRepository.logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         }
     }

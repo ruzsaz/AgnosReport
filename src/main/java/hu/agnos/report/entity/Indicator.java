@@ -50,6 +50,12 @@ public class Indicator {
     @JacksonXmlProperty(isAttribute = true)
     private String valueSign;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private String preferredColor;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "isColorExact")
+    private boolean isColorExact;
+
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<IndicatorLabels> multilingualization;

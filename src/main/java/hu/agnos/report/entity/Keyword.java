@@ -1,19 +1,14 @@
 package hu.agnos.report.entity;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,11 +43,6 @@ public class Keyword {
     public Keyword(String name, String icon) {
         this(name);
         this.icon = icon;
-    }
-
-    private static String base64encoder(String origin) {
-        byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes(StandardCharsets.UTF_8));
-        return new String(encodedBytes, StandardCharsets.UTF_8);
     }
 
     @JsonIgnore

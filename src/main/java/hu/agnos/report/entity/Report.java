@@ -13,10 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import hu.agnos.report.jacksonIgnoreUtils.JsonIgnoreWhenPersist;
 import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenPersistInspector;
@@ -108,11 +108,6 @@ public class Report {
         this.roleToAccess = roleToAccess;
     }
 
-    private static String base64encoder(String origin) {
-        byte[] encodedBytes = Base64.getEncoder().encode(origin.getBytes(StandardCharsets.UTF_8));
-        return new String(encodedBytes, StandardCharsets.UTF_8);
-    }
-
     @JsonIgnore
     public int getLanguageIdx(String language) {
         int result = -1;
@@ -169,8 +164,17 @@ public class Report {
         return null;
     }
 
-    public void addVisualization(Visualization entity) {
-        visualizations.add(entity);
+    public void setUnitedVisualization(String initString) {
+        if (initString == null || initString.isEmpty()) {
+            visualizations = new ArrayList<>();
+            return;
+        }
+        visualizations = Arrays.stream(initString.split(";")).map(Visualization::new).toList();
+    }
+
+    @JsonIgnore
+    public String getUnitedVisualization() {
+        return visualizations.stream().map(Visualization::getInitString).collect(Collectors.joining(";"));
     }
 
     public void addIndicator(Indicator entity) {

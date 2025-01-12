@@ -61,11 +61,4 @@ public class Dimension {
         transparentInCubes.remove(cubeName);
     }
 
-//    public Dimension deepCopy() {
-//        Dimension result = new Dimension(labels.size(), name, type, allowedDepth);
-//        result.setLabels(new ArrayList<>(labels));
-//        result.setTransparentInCubes(new HashSet<>(transparentInCubes));
-//        return result;
-//    }
-
 }

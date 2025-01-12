@@ -1,11 +1,9 @@
 package hu.agnos.report.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import hu.agnos.report.entity.Report;
-import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenPersistInspector;
 import hu.agnos.report.jacksonIgnoreUtils.DisableIgnoreWhenSendInspector;
 
 import org.slf4j.Logger;
@@ -36,7 +34,7 @@ import java.util.Optional;
 public class ReportRepository implements CrudRepository<Report, String> {
 
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
-    private static final Logger logger = LoggerFactory.getLogger(ReportRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportRepository.class);
     private final String reportDirectoryURI;
 
     public ReportRepository() {
@@ -60,7 +58,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
                     result = xmlMapper.readValue(new File(reportDirectoryURI, reportFileName), Report.class);
                     result.fillKeywordsFromKeywordStrings();
                 } catch (IOException ex) {
-                    ReportRepository.logger.error(ex.getMessage());
+                    ReportRepository.log.error(ex.getMessage());
                     return Optional.empty();
                 }
             }
@@ -134,7 +132,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
 
     @Override
     public void deleteAllById(Iterable<? extends String> ids) {
-        ReportRepository.logger.error("Not implemented");
+        ReportRepository.log.error("Not implemented");
     }
 
     @Override
@@ -160,7 +158,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
             xmlMapper.writeValue(new File(reportDirectoryURI, reportFullName), entity);
         } catch (IOException ex) {
-            ReportRepository.logger.error(ex.getMessage());
+            ReportRepository.log.error(ex.getMessage());
             return null;
         }
         return entity;
@@ -189,7 +187,7 @@ public class ReportRepository implements CrudRepository<Report, String> {
             validator.validate(xmlFile);
             return true;
         } catch (SAXException | IOException e) {
-            ReportRepository.logger.error(e.getMessage());
+            ReportRepository.log.error(e.getMessage());
             return false;
         }
     }

@@ -4,6 +4,9 @@ import java.lang.annotation.Annotation;
 
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
+/**
+ * Disable the jsonIgnoreWhenPersist annotation when sending object as json
+ */
 public class DisableIgnoreWhenPersistInspector extends JacksonAnnotationIntrospector {
 
     @Override
