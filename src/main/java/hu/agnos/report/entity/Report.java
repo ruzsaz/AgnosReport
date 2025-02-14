@@ -56,6 +56,10 @@ public class Report {
     @JacksonXmlProperty(localName = "Dimension")
     private List<Dimension> dimensions;
 
+    @JacksonXmlElementWrapper(localName = "Controls")
+    @JacksonXmlProperty(localName = "Control")
+    private List<Control> controls;
+
     @JacksonXmlElementWrapper(localName = "Indicators")
     @JacksonXmlProperty(localName = "Indicator")
     private List<Indicator> indicators;
@@ -89,6 +93,7 @@ public class Report {
         this.labels = new ArrayList<>(2);
         this.helps = new ArrayList<>(2);
         this.dimensions = new ArrayList<>(6);
+        this.controls = new ArrayList<>(1);
         this.indicators = new ArrayList<>(6);
         this.visualizations = new ArrayList<>(4);
         this.keywords = new ArrayList<>(5);
@@ -133,24 +138,18 @@ public class Report {
     public void addLanguage(String lang) {
         labels.add(new ReportLabels(lang));
         helps.add(new ReportHelp(lang));
-        for (Indicator indicator : indicators) {
-            indicator.addLanguage(lang);
-        }
-        for (Dimension dimension : dimensions) {
-            dimension.addLanguage(lang);
-        }
+        indicators.forEach(indicator -> indicator.addLanguage(lang));
+        dimensions.forEach(dimension -> dimension.addLanguage(lang));
+        controls.forEach(control -> control.addLanguage(lang));
         kpi.addLanguage(lang);
     }
 
     public void removeLanguage(int index) {
         labels.remove(index);
         helps.remove(index);
-        for (Indicator indicator : indicators) {
-            indicator.removeLanguage(index);
-        }
-        for (Dimension dimension : dimensions) {
-            dimension.removeLanguage(index);
-        }
+        indicators.forEach(indicator -> indicator.removeLanguage(index));
+        dimensions.forEach(dimension -> dimension.removeLanguage(index));
+        controls.forEach(control -> control.removeLanguage(index));
         kpi.removeLanguage(index);
     }
 

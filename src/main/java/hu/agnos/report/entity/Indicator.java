@@ -21,6 +21,9 @@ import lombok.ToString;
 public class Indicator {
 
     @JacksonXmlProperty(isAttribute = true)
+    private String denominatorFunction;
+
+    @JacksonXmlProperty(isAttribute = true)
     private String denominatorName;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -34,6 +37,9 @@ public class Indicator {
 
     @JacksonXmlProperty(isAttribute = true)
     private boolean denominatorIsHidden;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String valueFunction;
 
     @JacksonXmlProperty(isAttribute = true)
     private String valueName;

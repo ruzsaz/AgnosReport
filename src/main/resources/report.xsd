@@ -56,6 +56,29 @@
                   </xs:sequence>
                </xs:complexType>
             </xs:element>
+            <xs:element name="Controls" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Control" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Labels" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                    <xs:attribute name="lang" type="xs:string" use="required" />
+                                    <xs:attribute name="caption" type="xs:string" use="required" />
+                                    <xs:attribute name="description" type="xs:string" use="required" />
+                                    <xs:attribute name="values" type="xs:string" use="required" />
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                           <xs:attribute name="type" type="xs:string" use="required" />
+                           <xs:attribute name="parameters" type="xs:string" />
+                           <xs:attribute name="defaultValue" type="xs:string" />
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
             <xs:element name="Indicators">
                <xs:complexType>
                   <xs:sequence>
@@ -74,13 +97,15 @@
                                  </xs:complexType>
                               </xs:element>
                            </xs:sequence>
-                           <xs:attribute name="valueName" type="xs:string" use="required" />
-                           <xs:attribute name="valueCubeName" type="xs:string" use="required" />
+                           <xs:attribute name="valueFunction" type="xs:string" />
+                           <xs:attribute name="valueName" type="xs:string" />
+                           <xs:attribute name="valueCubeName" type="xs:string" />
                            <xs:attribute name="valueIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="valueSign" type="xs:decimal" use="required" />
                            <xs:attribute name="valueMultiplier" type="xs:decimal" use="required" />
-                           <xs:attribute name="denominatorName" type="xs:string" use="required" />
-                           <xs:attribute name="denominatorCubeName" type="xs:string" use="required" />
+                           <xs:attribute name="denominatorFunction" type="xs:string" />
+                           <xs:attribute name="denominatorName" type="xs:string" />
+                           <xs:attribute name="denominatorCubeName" type="xs:string" />
                            <xs:attribute name="denominatorIsHidden" type="xs:boolean" use="required" />
                            <xs:attribute name="denominatorSign" type="xs:decimal" use="required" />
                            <xs:attribute name="denominatorMultiplier" type="xs:decimal" use="required" />
