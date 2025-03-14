@@ -27,6 +27,9 @@ public class Dimension {
     @JacksonXmlProperty(isAttribute = true)
     private int allowedDepth;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private String lang;
+
     @JacksonXmlProperty(localName = "Labels")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<DimensionLabels> multilingualization;
@@ -38,6 +41,7 @@ public class Dimension {
     public Dimension(List<ReportLabels> reportLabels) {
         this.name = "";
         this.type = "";
+        this.lang = "";
         this.transparentInCubes = new HashSet<>(1);
         this.multilingualization = new ArrayList<>(reportLabels.size());
         for (ReportLabels reportLabel : reportLabels) {

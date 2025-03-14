@@ -3,6 +3,14 @@
    <xs:element name="Report">
       <xs:complexType>
          <xs:sequence>
+            <xs:element name="Dictionaries" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Dictionary" minOccurs="0" maxOccurs="unbounded">
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
             <xs:element name="Cubes">
                <xs:complexType>
                   <xs:sequence>
@@ -51,6 +59,7 @@
                            <xs:attribute name="name" type="xs:string" use="required" />
                            <xs:attribute name="type" type="xs:string"/>
                            <xs:attribute name="allowedDepth" type="xs:nonNegativeInteger" use="required" />
+                           <xs:attribute name="lang" type="xs:string"/>
                         </xs:complexType>
                      </xs:element>
                   </xs:sequence>
@@ -153,7 +162,6 @@
                   <xs:attribute name="isRatio" type="xs:boolean" use="required" />
                </xs:complexType>
             </xs:element>
-
          </xs:sequence>
          <xs:attribute name="name" type="xs:string" use="required" />
          <xs:attribute name="roleToAccess" type="xs:string" />

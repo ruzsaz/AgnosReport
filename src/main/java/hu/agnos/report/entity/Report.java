@@ -40,6 +40,10 @@ public class Report {
     @JacksonXmlProperty(isAttribute = true)
     private Boolean saveAllowed;
 
+    @JacksonXmlElementWrapper(localName = "Dictionaries")
+    @JacksonXmlProperty(localName = "Dictionary")
+    private List<String> dictionaries;
+
     @JacksonXmlElementWrapper(localName = "Cubes")
     @JacksonXmlProperty(localName = "Cube")
     private List<Cube> cubes;
